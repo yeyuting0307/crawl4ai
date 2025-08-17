@@ -32,6 +32,21 @@ from crawl4ai import (
     DFSDeepCrawlStrategy,
     BestFirstCrawlingStrategy,
 )
+
+# Task-driven crawler imports (separate to avoid circular import)
+try:
+    from .task_driven_crawler_v2 import (
+        TaskDrivenCrawler,
+        TaskObjective,
+        TaskResult,
+        quick_crawl_task,
+    )
+except ImportError as e:
+    print(f"Warning: Could not import task-driven crawler: {e}")
+    TaskDrivenCrawler = None
+    TaskObjective = None
+    TaskResult = None
+    quick_crawl_task = None
 from crawl4ai.config import USER_SETTINGS
 from litellm import completion
 from pathlib import Path
@@ -1460,9 +1475,167 @@ def default(url: str, example: bool, browser_config: str, crawler_config: str, f
         max_pages=max_pages
     )
 
+# Task-driven crawler commands
+@cli.command("task")
+@click.option('--title', required=True, help='任務標題')
+@click.option('--description', required=True, help='任務描述')
+@click.option('--keywords', help='關鍵字（逗號分隔）')
+@click.option('--output-format', default='structured', type=click.Choice(['structured', 'summary']), help='輸出格式')
+@click.option('--additional-urls', help='額外 URL（逗號分隔）')
+@click.option('--output-dir', default='./crawl_results', help='輸出目錄')
+@click.option('--llm-provider', default='openai/local', help='LLM 提供者')
+@click.option('--llm-base-url', default='http://127.0.0.1:1234/v1', help='LLM 基礎 URL')
+@click.option('--llm-api-token', default='local-mlx', help='LLM API Token')
+@click.option('--verbose', is_flag=True, help='詳細輸出')
+def task_crawl(title, description, keywords, output_format, additional_urls, output_dir, 
+               llm_provider, llm_base_url, llm_api_token, verbose):
+    """
+    執行任務驅動的智慧爬蟲
+    
+    範例:
+    crwl task --title "NVIDIA 股價分析" --description "收集 NVIDIA 股價預測和分析" --keywords "NVDA,股價,預測" --output-format structured
+    """
+    if quick_crawl_task is None:
+        console.print("[bold red]錯誤:[/bold red] 任務驅動爬蟲模組無法載入")
+        return
+    
+    import asyncio
+    
+    async def run_task():
+        try:
+            # 設定日誌級別
+            if verbose:
+                import logging
+                logging.basicConfig(level=logging.INFO)
+            
+            # 配置 LLM
+            llm_config = LLMConfig(
+                provider=llm_provider,
+                base_url=llm_base_url,
+                api_token=llm_api_token
+            )
+            
+            # 解析關鍵字和額外 URL
+            keyword_list = []
+            if keywords:
+                keyword_list = [k.strip() for k in keywords.split(',')]
+            
+            additional_url_list = []
+            if additional_urls:
+                additional_url_list = [url.strip() for url in additional_urls.split(',')]
+            
+            # 顯示任務資訊
+            console.print(Panel(f"""
+[bold cyan]任務驅動爬蟲[/bold cyan]
+
+[bold]標題:[/bold] {title}
+[bold]描述:[/bold] {description}
+[bold]關鍵字:[/bold] {', '.join(keyword_list) if keyword_list else '無'}
+[bold]輸出格式:[/bold] {output_format}
+[bold]額外 URL:[/bold] {len(additional_url_list)} 個
+[bold]輸出目錄:[/bold] {output_dir}
+            """, title="任務配置"))
+            
+            # 執行任務
+            with console.status("[bold green]執行任務中...") as status:
+                result = await quick_crawl_task(
+                    title=title,
+                    description=description,
+                    llm_config=llm_config,
+                    keywords=keyword_list,
+                    output_format=output_format,
+                    additional_urls=additional_url_list,
+                    output_dir=output_dir
+                )
+            
+            # 顯示結果
+            console.print(Panel(f"""
+[bold green]任務完成！[/bold green]
+
+[bold]任務 ID:[/bold] {result.task_id}
+[bold]狀態:[/bold] {result.status}
+[bold]發現網站:[/bold] {len(result.discovered_urls)} 個
+[bold]爬取頁面:[/bold] {result.crawled_pages} 個
+[bold]信心度:[/bold] {result.confidence_score:.2%}
+[bold]執行時間:[/bold] {result.execution_time:.1f} 秒
+
+[bold]結果保存在:[/bold] {output_dir}
+            """, title="執行結果"))
+            
+            # 如果有結構化資料，顯示摘要
+            if result.extracted_data:
+                console.print(f"\n[bold cyan]抽取了 {len(result.extracted_data)} 條結構化資料[/bold cyan]")
+                
+                # 顯示前幾條資料的預覽
+                if len(result.extracted_data) > 0:
+                    console.print("\n[bold]資料預覽:[/bold]")
+                    for i, item in enumerate(result.extracted_data[:3]):
+                        console.print(f"{i+1}. {item.get('source_url', 'N/A')}")
+                        if 'data' in item:
+                            data = item['data']
+                            if isinstance(data, dict):
+                                for key, value in list(data.items())[:3]:
+                                    console.print(f"   {key}: {str(value)[:100]}...")
+            
+            # 如果有摘要，顯示部分內容
+            if result.summary:
+                console.print(f"\n[bold cyan]摘要預覽:[/bold cyan]")
+                summary_preview = result.summary[:300] + "..." if len(result.summary) > 300 else result.summary
+                console.print(summary_preview)
+            
+            return result
+            
+        except Exception as e:
+            console.print(f"[bold red]錯誤:[/bold red] {str(e)}")
+            raise
+    
+    # 運行異步任務
+    return asyncio.run(run_task())
+
+@cli.command("task-example")
+def task_example():
+    """
+    顯示任務驅動爬蟲的使用範例
+    """
+    console.print(Panel("""
+[bold cyan]任務驅動爬蟲使用範例[/bold cyan]
+
+[bold]1. NVIDIA 股價分析:[/bold]
+crwl task --title "NVIDIA 股價分析 2025" \\
+          --description "收集和分析 NVIDIA 股價預測、專家觀點和市場分析" \\
+          --keywords "NVDA,NVIDIA,股價,AI晶片,預測" \\
+          --output-format structured
+
+[bold]2. 產業趨勢研究:[/bold]
+crwl task --title "AI 半導體產業趨勢" \\
+          --description "研究人工智慧半導體市場的最新趨勢和發展" \\
+          --keywords "AI,半導體,市場趨勢,技術發展" \\
+          --output-format summary
+
+[bold]3. 品牌監測:[/bold]
+crwl task --title "Tesla 品牌聲量監測" \\
+          --description "監測 Tesla 在各大媒體的報導和市場反應" \\
+          --keywords "Tesla,特斯拉,電動車,馬斯克" \\
+          --additional-urls "https://www.tesla.com,https://ir.tesla.com" \\
+          --output-format structured
+
+[bold]4. 學術研究追蹤:[/bold]
+crwl task --title "量子計算研究進展" \\
+          --description "追蹤量子計算領域的最新研究成果和論文" \\
+          --keywords "量子計算,量子演算法,qubit,quantum" \\
+          --output-format summary
+
+[bold]配置選項:[/bold]
+--llm-provider: LLM 提供者（預設: openai/local）
+--llm-base-url: 本地 LLM 服務地址（預設: http://127.0.0.1:1234/v1）
+--llm-api-token: API Token（預設: not-important）
+--output-dir: 結果輸出目錄（預設: ./crawl_results）
+--verbose: 顯示詳細執行過程
+    """, title="使用範例"))
+
 def main():
     import sys
-    if len(sys.argv) < 2 or sys.argv[1] not in cli.commands:
+    if len(sys.argv) < 2 or sys.argv[1] not in ['task', 'task-example', 'browser', 'crawl', 'cdp', 'config', 'profiles']:
         sys.argv.insert(1, "crawl")
     cli()
 

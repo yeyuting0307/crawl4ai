@@ -1,7 +1,7 @@
 """
 Adaptive Web Crawler for Crawl4AI
 
-This module implements adaptive information foraging for efficient web crawling.
+This module implements adaptive information for efficient web crawling.
 It determines when sufficient information has been gathered to answer a query,
 avoiding unnecessary crawls while ensuring comprehensive coverage.
 """
@@ -531,7 +531,8 @@ class StatisticalStrategy(CrawlStrategy):
             
             # Extract and process content - try multiple fields
             try:
-                content = result.markdown.raw_markdown
+                # Ensure result.markdown is safely accessed
+                content = getattr(result.markdown, 'raw_markdown', '') or ""
             except AttributeError:
                 print(f"Warning: CrawlResult {result.url} has no markdown content")
                 content = ""
@@ -586,14 +587,21 @@ class StatisticalStrategy(CrawlStrategy):
     
     def _get_document_terms(self, crawl_result: CrawlResult) -> List[str]:
         """Extract terms from a crawl result"""
-        content = crawl_result.markdown.raw_markdown or ""
+        # Handle both string and MarkdownGenerationResult types
+        if hasattr(crawl_result, 'markdown') and crawl_result.markdown:
+            if hasattr(crawl_result.markdown, 'raw_markdown'):
+                content = crawl_result.markdown.raw_markdown or ""
+            else:
+                content = str(crawl_result.markdown) or ""
+        else:
+            content = ""
         return self._tokenize(content.lower())
 
 
 class EmbeddingStrategy(CrawlStrategy):
     """Embedding-based adaptive crawling using semantic space coverage"""
     
-    def __init__(self, embedding_model: str = None, llm_config: Dict = None):
+    def __init__(self, embedding_model: Optional[str] = None, llm_config: Optional[Dict] = None):
         self.embedding_model = embedding_model or "sentence-transformers/all-MiniLM-L6-v2"
         self.llm_config = llm_config
         self._embedding_cache = {}
@@ -609,14 +617,36 @@ class EmbeddingStrategy(CrawlStrategy):
     async def _get_embeddings(self, texts: List[str]) -> Any:
         """Get embeddings using configured method"""
         from .utils import get_text_embeddings
-        embedding_llm_config = {
-            'provider': 'openai/text-embedding-3-small',
-            'api_token': os.getenv('OPENAI_API_KEY')
-        }
+
+        # 自動偵測本地 LLM 並設置正確的 provider/model
+        IS_LOCAL_LLM = False
+        local_llm_url = os.getenv("LOCAL_LLM_URL", "")
+        if local_llm_url.startswith("http://localhost") or local_llm_url.startswith("http://127.0.0.1"):
+            IS_LOCAL_LLM = True
+
+        if hasattr(self, 'llm_config') and self.llm_config:
+            embedding_llm_config = dict(self.llm_config)
+            # 若為本地 LLM，強制覆蓋 provider/model
+            if IS_LOCAL_LLM:
+                embedding_llm_config['provider'] = 'text-embedding-nomic-embed-text-v1.5'
+                embedding_llm_config['model'] = 'text-embedding-nomic-embed-text-v1.5'
+        else:
+            if IS_LOCAL_LLM:
+                embedding_llm_config = {
+                    'provider': 'text-embedding-nomic-embed-text-v1.5',
+                    'model': 'text-embedding-nomic-embed-text-v1.5',
+                    'api_token': None,
+                    'base_url': local_llm_url
+                }
+            else:
+                embedding_llm_config = {
+                    'provider': 'openai/text-embedding-3-small',
+                    'api_token': os.getenv('OPENAI_API_KEY')
+                }
         return await get_text_embeddings(
-            texts, 
+            texts,
             embedding_llm_config,
-            self.embedding_model
+            embedding_llm_config.get('model', self.embedding_model)
         )
     
     def _compute_distance_matrix(self, query_embeddings: Any, kb_embeddings: Any) -> Any:
@@ -843,10 +873,17 @@ class EmbeddingStrategy(CrawlStrategy):
         
         # Batch embed only uncached links
         if texts_to_embed:
-            embedding_llm_config = {
-                'provider': 'openai/text-embedding-3-small',
-                'api_token': os.getenv('OPENAI_API_KEY')
-            }
+            if hasattr(self, 'llm_config') and self.llm_config:
+                embedding_llm_config = {
+                    'provider': self.llm_config.get('provider', 'openai/text-embedding-3-small'),
+                    'api_token': self.llm_config.get('api_token'),
+                    'base_url': self.llm_config.get('base_url')
+                }
+            else:
+                embedding_llm_config = {
+                    'provider': 'openai/text-embedding-3-small',
+                    'api_token': os.getenv('OPENAI_API_KEY')
+                }
             new_embeddings = await get_text_embeddings(texts_to_embed, embedding_llm_config, self.embedding_model)
 
             # Cache the new embeddings
@@ -904,7 +941,7 @@ class EmbeddingStrategy(CrawlStrategy):
                     # Only penalize if very similar (above threshold)
                     overlap_threshold = self.config.embedding_overlap_threshold if hasattr(self, 'config') else 0.85
                     if max_similarity > overlap_threshold:
-                        overlap_penalty = (max_similarity - overlap_threshold) * 2  # 0 to 0.3 range
+                        overlap_penalty = (max_similarity - overlap_threshold) * 2 # 0 to 0.3 range
                     else:
                         overlap_penalty = 0
                 else:
@@ -1175,7 +1212,14 @@ class EmbeddingStrategy(CrawlStrategy):
         new_texts = []
         valid_results = []
         for result in new_results:
-            content = result.markdown.raw_markdown if hasattr(result, 'markdown') and result.markdown else ""
+            # Handle both string and MarkdownGenerationResult types
+            if hasattr(result, 'markdown') and result.markdown:
+                if hasattr(result.markdown, 'raw_markdown'):
+                    content = result.markdown.raw_markdown or ""
+                else:
+                    content = str(result.markdown) or ""
+            else:
+                content = ""
             if content:  # Only process non-empty content
                 new_texts.append(content[:5000])  # Limit text length
                 valid_results.append(result)
@@ -1184,10 +1228,17 @@ class EmbeddingStrategy(CrawlStrategy):
             return
             
         # Get embeddings for new texts
-        embedding_llm_config = {
-            'provider': 'openai/text-embedding-3-small',
-            'api_token': os.getenv('OPENAI_API_KEY')
-        }        
+        if hasattr(self, 'llm_config') and self.llm_config:
+            embedding_llm_config = {
+                'provider': self.llm_config.get('provider', 'openai/text-embedding-3-small'),
+                'api_token': self.llm_config.get('api_token'),
+                'base_url': self.llm_config.get('base_url')
+            }
+        else:
+            embedding_llm_config = {
+                'provider': 'openai/text-embedding-3-small',
+                'api_token': os.getenv('OPENAI_API_KEY')
+            }        
         new_embeddings = await get_text_embeddings(new_texts, embedding_llm_config, self.embedding_model)
 
         # Deduplicate embeddings before adding to KB
@@ -1478,10 +1529,13 @@ class AdaptiveCrawler:
         if not self.state:
             return {}
         
-        total_content_length = sum(
-            len(result.markdown.raw_markdown or "") 
-            for result in self.state.knowledge_base
-        )
+        total_content_length = 0
+        for result in self.state.knowledge_base:
+            if hasattr(result, 'markdown') and result.markdown:
+                if hasattr(result.markdown, 'raw_markdown'):
+                    total_content_length += len(result.markdown.raw_markdown or "")
+                else:
+                    total_content_length += len(str(result.markdown) or "")
         
         return {
             'pages_crawled': len(self.state.crawled_urls),
@@ -1522,9 +1576,10 @@ class AdaptiveCrawler:
             console = Console()
             use_rich = True
         except ImportError:
+            console = None
             use_rich = False
             
-        if not detailed and use_rich:
+        if not detailed and use_rich and console:
             # Summary view with nice table (like original)
             table = Table(title=f"Adaptive Crawl Stats - Query: '{self.state.query}'")
             table.add_column("Metric", style="cyan", no_wrap=True)
@@ -1557,8 +1612,9 @@ class AdaptiveCrawler:
                 table.add_row("", "")  # Spacer
                 table.add_row("Is Sufficient?", "[green]Yes[/green]" if self.is_sufficient else "[red]No[/red]")
             
-            console.print(table)
-        else:
+            if console:
+                console.print(table)
+        elif use_rich and console:
             # Detailed view or fallback when rich not available
             print("\n" + "="*80)
             print(f"Adaptive Crawl Statistics - Query: '{self.state.query}'")
@@ -1612,7 +1668,8 @@ class AdaptiveCrawler:
             else:
                 # Query coverage for statistical strategy
                 print(f"\n[*] Query Coverage:")
-                query_terms = self.strategy._tokenize(self.state.query.lower())
+                # Use fallback tokenization to avoid type issues
+                query_terms = self.state.query.lower().split()
                 for term in query_terms:
                     tf = self.state.term_frequencies.get(term, 0)
                     df = self.state.document_frequencies.get(term, 0)
@@ -1743,6 +1800,7 @@ class AdaptiveCrawler:
         else:
             raise ValueError(f"Unsupported export format: {format}")
     
+    
     def _crawl_result_to_export_dict(self, result) -> Dict[str, Any]:
         """Convert CrawlResult to a dictionary for export"""
         # Extract all available fields
@@ -1842,17 +1900,33 @@ class AdaptiveCrawler:
         query_terms = set(self.state.query.lower().split())
         
         for i, result in enumerate(self.state.knowledge_base):
-            content = (result.markdown.raw_markdown or "").lower()
+            # Handle both string and MarkdownGenerationResult types
+            if hasattr(result, 'markdown') and result.markdown:
+                if hasattr(result.markdown, 'raw_markdown'):
+                    content = (result.markdown.raw_markdown or "").lower()
+                else:
+                    content = str(result.markdown).lower() or ""
+            else:
+                content = ""
             content_terms = set(content.split())
             
             # Calculate relevance score
             overlap = len(query_terms & content_terms)
             score = overlap / len(query_terms) if query_terms else 0.0
             
+            # Get export content
+            if hasattr(result, 'markdown') and result.markdown:
+                if hasattr(result.markdown, 'raw_markdown'):
+                    export_content = result.markdown.raw_markdown
+                else:
+                    export_content = str(result.markdown)
+            else:
+                export_content = ""
+            
             scored_docs.append({
                 'url': result.url,
                 'score': score,
-                'content': result.markdown.raw_markdown,
+                'content': export_content,
                 'index': i
             })
         

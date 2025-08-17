@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables from .env file
 
 # Default provider, ONLY used when the extraction strategy is LLMExtractionStrategy
-DEFAULT_PROVIDER = "openai/gpt-4o"
+# Use local LLM if available, otherwise use OpenAI
+DEFAULT_PROVIDER = "openai/gpt-oss-20b" if os.getenv("LOCAL_LLM_URL") else "openai/gpt-4o"
 DEFAULT_PROVIDER_API_KEY = "OPENAI_API_KEY"
 MODEL_REPO_BRANCH = "new-release-0.0.2"
 # Provider-model dictionary, ONLY used when the extraction strategy is LLMExtractionStrategy
@@ -29,14 +30,29 @@ PROVIDER_MODELS = {
     'gemini/gemini-2.0-flash-lite-preview-02-05': os.getenv("GEMINI_API_KEY"),
     "deepseek/deepseek-chat": os.getenv("DEEPSEEK_API_KEY"),
 }
+# Check if using local LLM first
+LOCAL_LLM_URL = os.getenv("LOCAL_LLM_URL", "http://localhost:1234/v1")
+LOCAL_LLM_MODEL = "openai/gpt-oss-20b"
+IS_LOCAL_LLM = LOCAL_LLM_URL and ("localhost" in LOCAL_LLM_URL or "127.0.0.1" in LOCAL_LLM_URL)
+
 PROVIDER_MODELS_PREFIXES = {
     "ollama": "no-token-needed",  # Any model from Ollama no need for API token
     "groq": os.getenv("GROQ_API_KEY"),
-    "openai": os.getenv("OPENAI_API_KEY"),
+    "openai": "no-token-needed" if IS_LOCAL_LLM else os.getenv("OPENAI_API_KEY"),
     "anthropic": os.getenv("ANTHROPIC_API_KEY"),
     "gemini": os.getenv("GEMINI_API_KEY"),
     "deepseek": os.getenv("DEEPSEEK_API_KEY"),
 }
+
+# Add support for local LLM without API key
+if IS_LOCAL_LLM:
+    PROVIDER_MODELS["local/llm"] = "no-token-needed"
+    PROVIDER_MODELS_PREFIXES["local"] = "no-token-needed"
+    PROVIDER_MODELS[LOCAL_LLM_MODEL] = "no-token-needed"
+    # Override all OpenAI models to not need tokens when using local LLM
+    for model_name in PROVIDER_MODELS:
+        if model_name.startswith("openai/"):
+            PROVIDER_MODELS[model_name] = "no-token-needed"
 
 # Chunk token threshold
 CHUNK_TOKEN_THRESHOLD = 2**11  # 2048 tokens

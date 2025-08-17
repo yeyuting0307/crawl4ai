@@ -67,8 +67,16 @@ from .deep_crawling import (
     DFSDeepCrawlStrategy,
     DeepCrawlDecorator,
 )
-# NEW: Import AsyncUrlSeeder
-from .async_url_seeder import AsyncUrlSeeder
+# NEW: Task-driven crawler
+from .task_driven_crawler_v2 import (
+    TaskDrivenCrawler,
+    TaskObjective,
+    TaskResult,
+    DiscoveryConfig,
+    SiteDiscoveryEngine,
+    create_task_crawler,
+    quick_crawl_task
+)
 # Adaptive Crawler
 from .adaptive_crawler import (
     AdaptiveCrawler,
@@ -110,8 +118,14 @@ __all__ = [
     # NEW: Add SeedingConfig and VirtualScrollConfig
     "SeedingConfig",
     "VirtualScrollConfig",
-    # NEW: Add AsyncUrlSeeder
-    "AsyncUrlSeeder",
+    # NEW: Task-driven crawler
+    "TaskDrivenCrawler",
+    "TaskObjective", 
+    "TaskResult",
+    "DiscoveryConfig",
+    "SiteDiscoveryEngine",
+    "create_task_crawler",
+    "quick_crawl_task",
     # Adaptive Crawler
     "AdaptiveCrawler",
     "AdaptiveConfig", 
