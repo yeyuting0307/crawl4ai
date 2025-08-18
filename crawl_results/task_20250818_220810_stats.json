@@ -1,0 +1,21 @@
+{
+  "total_pages": 3,
+  "avg_relevance_score": 0.03333333333333333,
+  "avg_time_score": 0.10000000000000002,
+  "depth_distribution": {
+    "0": 3
+  },
+  "found_via_distribution": {
+    "direct": 3
+  },
+  "domain_distribution": {
+    "www.investing.com": 1,
+    "www.gartner.com": 1,
+    "spectrum.ieee.org": 1
+  },
+  "date_range": {
+    "earliest": null,
+    "latest": null,
+    "with_dates": 0
+  }
+}

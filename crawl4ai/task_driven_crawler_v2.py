@@ -71,6 +71,9 @@ class PageInfo:
     depth: int = 0  # 新增：搜索深度
     parent_url: str = ""  # 新增：父頁面URL
     found_via: str = ""  # 新增：發現方式（search/link/subpage）
+    is_helpful: bool = False  # 新增：對爬蟲目標是否有幫助
+    helpfulness_score: float = 0.0  # 新增：幫助度分數 (0-1)
+    helpfulness_reason: str = ""  # 新增：幫助度評估原因
     extracted_at: datetime = field(default_factory=datetime.now)
 
 @dataclass 
@@ -103,6 +106,8 @@ class TaskResult:
     status: str = "initialized"
     error_messages: List[str] = field(default_factory=list)
     search_stats: Dict[str, Any] = field(default_factory=dict)  # 新增：搜索統計信息
+    helpfulness_stats: Dict[str, Any] = field(default_factory=dict)  # 新增：幫助度統計
+    search_stats: Dict[str, Any] = field(default_factory=dict)  # 新增：搜索統計信息
 
 class SmartSearchEngine:
     """智慧搜索引擎 - 處理子頁面和站內搜索"""
@@ -119,17 +124,19 @@ class SmartSearchEngine:
         objective: TaskObjective, 
         crawler: AsyncWebCrawler
     ) -> List[PageInfo]:
-        """智慧爬取網站，包含子頁面搜索和站內搜索"""
+        """智慧爬取網站，包含子頁面搜索和站內搜索，支援動態深度調整"""
         logger.info(f"開始智慧爬取: {base_url}")
         
         pages = []
         queue = [(base_url, 0, "")]  # (url, depth, parent_url)
+        consecutive_unhelpful_count = 0  # 連續無幫助頁面計數
+        max_dynamic_depth = objective.max_search_depth  # 動態最大深度
         
         while queue and len(pages) < objective.max_results:
             current_url, depth, parent_url = queue.pop(0)
             
-            # 檢查深度限制
-            if depth > objective.max_search_depth:
+            # 檢查動態深度限制
+            if depth > max_dynamic_depth:
                 continue
                 
             # 檢查是否已訪問
@@ -145,10 +152,35 @@ class SmartSearchEngine:
                 )
                 
                 if page_info:
+                    # 先評估頁面幫助度
+                    await self._evaluate_page_helpfulness(page_info, objective)
+                    
+                    # 根據幫助度重新生成摘要（如果需要更詳細的摘要）
+                    if page_info.is_helpful and objective.enable_content_summary:
+                        page_info.summary = await self._generate_content_summary(
+                            page_info.content, objective, page_info
+                        )
+                    
                     pages.append(page_info)
                     
-                    # 如果當前頁面相關度高，搜索子頁面
-                    if page_info.relevance_score > 0.5 and depth < objective.max_search_depth:
+                    # 動態深度調整邏輯
+                    if page_info.is_helpful:
+                        # 發現有幫助的頁面，重置計數並增加深度
+                        consecutive_unhelpful_count = 0
+                        if max_dynamic_depth < objective.max_search_depth + 2:
+                            max_dynamic_depth += 2  # 動態增加2層深度
+                            logger.info(f"發現有幫助頁面，動態增加搜索深度至 {max_dynamic_depth}")
+                    else:
+                        # 無幫助頁面，增加計數
+                        consecutive_unhelpful_count += 1
+                        
+                        # 如果在深度2連續2個無幫助頁面，停止深入搜索
+                        if depth >= 2 and consecutive_unhelpful_count >= 2:
+                            logger.info(f"深度 {depth} 連續 {consecutive_unhelpful_count} 個無幫助頁面，停止深入搜索")
+                            continue
+                    
+                    # 如果當前頁面相關度高或有幫助，搜索子頁面
+                    if (page_info.relevance_score > 0.5 or page_info.is_helpful) and depth < max_dynamic_depth:
                         subpages = await self._find_relevant_subpages(
                             current_url, objective, crawler, depth + 1
                         )
@@ -525,6 +557,87 @@ class SmartSearchEngine:
         
         return None
     
+    async def _evaluate_page_helpfulness(self, page_info: PageInfo, objective: TaskObjective) -> None:
+        """評估頁面對爬蟲目標的幫助度"""
+        try:
+            prompt = f"""
+請評估以下網頁內容對指定任務目標的幫助程度：
+
+任務目標：
+- 標題: {objective.title}
+- 描述: {objective.description}
+- 關鍵字: {', '.join(objective.keywords)}
+
+網頁資訊：
+- URL: {page_info.url}
+- 標題: {page_info.title}
+- 內容摘要: {page_info.summary[:500]}...
+
+請從以下角度評估：
+1. 內容相關性：是否直接相關於任務目標
+2. 資訊價值：是否提供有用的數據、分析或見解
+3. 時效性：資訊是否具有時效性價值
+4. 完整性：資訊是否足夠完整有用
+
+請返回JSON格式評估結果：
+{{
+    "is_helpful": true/false,
+    "helpfulness_score": 0.0-1.0,
+    "reason": "評估原因說明"
+}}
+
+只返回JSON，不要其他文字。
+"""
+
+            # 調用LLM進行評估
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 200,
+                    "temperature": 0.1
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=15.0
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get('choices') and len(result['choices']) > 0:
+                        content = result['choices'][0]['message']['content'].strip()
+                        
+                        # 解析JSON回應
+                        try:
+                            evaluation = json.loads(content)
+                            
+                            page_info.is_helpful = evaluation.get('is_helpful', False)
+                            page_info.helpfulness_score = evaluation.get('helpfulness_score', 0.0)
+                            page_info.helpfulness_reason = evaluation.get('reason', '')
+                            
+                            logger.info(f"頁面幫助度評估 {page_info.url}: {page_info.helpfulness_score:.2f} ({'有幫助' if page_info.is_helpful else '無幫助'})")
+                            
+                        except json.JSONDecodeError:
+                            # 如果JSON解析失敗，使用預設值
+                            page_info.is_helpful = page_info.relevance_score > 0.6
+                            page_info.helpfulness_score = page_info.relevance_score
+                            page_info.helpfulness_reason = "LLM評估解析失敗，使用相關度作為參考"
+                else:
+                    # API調用失敗，使用相關度作為後備
+                    page_info.is_helpful = page_info.relevance_score > 0.6
+                    page_info.helpfulness_score = page_info.relevance_score
+                    page_info.helpfulness_reason = "LLM API調用失敗，使用相關度作為後備評估"
+                    
+        except Exception as e:
+            logger.error(f"評估頁面幫助度失敗: {e}")
+            # 發生錯誤時的後備邏輯
+            page_info.is_helpful = page_info.relevance_score > 0.6
+            page_info.helpfulness_score = page_info.relevance_score
+            page_info.helpfulness_reason = f"評估失敗: {str(e)}"
+    
     def _calculate_time_score(self, publish_date: Optional[datetime], decay_hours: int) -> float:
         """計算時間權重分數"""
         if not publish_date:
@@ -581,16 +694,26 @@ class SmartSearchEngine:
         relevance = (keyword_score * 0.7 + title_score * 0.3)
         return min(1.0, relevance)
     
-    async def _generate_content_summary(self, content: str, objective: TaskObjective) -> str:
-        """生成內容摘要"""
+    async def _generate_content_summary(self, content: str, objective: TaskObjective, page_info: Optional[PageInfo] = None) -> str:
+        """生成內容摘要，根據頁面幫助度動態調整詳細程度"""
         if not content or len(content.strip()) < 100:
             return "內容過短，無法生成摘要"
         
         try:
-            # 限制內容長度以避免token限制
-            content_snippet = content[:2000]
+            # 根據幫助度決定內容長度和摘要詳細程度
+            is_helpful = getattr(page_info, 'is_helpful', False) if page_info else False
+            helpfulness_score = getattr(page_info, 'helpfulness_score', 0.0) if page_info else 0.0
             
-            summary = await self._call_llm_for_summary(content_snippet, objective)
+            if is_helpful or helpfulness_score > 0.7:
+                # 有幫助的內容：使用更多內容，生成詳細摘要
+                content_snippet = content[:4000]  # 增加內容長度
+                summary_type = "detailed"
+            else:
+                # 一般內容：使用較少內容，生成簡潔摘要
+                content_snippet = content[:2000]
+                summary_type = "brief"
+            
+            summary = await self._call_llm_for_summary(content_snippet, objective, summary_type)
             if summary:
                 return summary
             
@@ -601,7 +724,7 @@ class SmartSearchEngine:
         sentences = content.split('.')[:3]  # 取前3句
         return '. '.join(sentences)[:200] + "..."
     
-    async def _call_llm_for_summary(self, content: str, objective: TaskObjective) -> Optional[str]:
+    async def _call_llm_for_summary(self, content: str, objective: TaskObjective, summary_type: str = "brief") -> Optional[str]:
         """調用LLM生成摘要"""
         try:
             # 檢測是否使用本地LLM
@@ -610,19 +733,37 @@ class SmartSearchEngine:
             
             if is_local_llm:
                 # 使用本地LLM的 chat/completions API
-                return await self._call_local_llm_chat(content, objective)
+                return await self._call_local_llm_chat(content, objective, summary_type)
             else:
                 # 使用雲端LLM
-                return await self._call_cloud_llm(content, objective)
+                return await self._call_cloud_llm(content, objective, summary_type)
                 
         except Exception as e:
             logger.error(f"LLM調用失敗: {e}")
             return None
     
-    async def _call_local_llm_chat(self, content: str, objective: TaskObjective) -> Optional[str]:
-        """調用本地LLM的chat API"""
+    async def _call_local_llm_chat(self, content: str, objective: TaskObjective, summary_type: str = "brief") -> Optional[str]:
+        """調用本地LLM的chat API，支援不同摘要詳細程度"""
         try:
-            prompt = f"""請為以下內容生成簡潔摘要，重點關注與"{objective.title}"相關的信息：
+            # 根據摘要類型調整prompt
+            if summary_type == "detailed":
+                prompt = f"""請為以下內容生成詳細摘要，重點關注與"{objective.title}"相關的信息：
+
+內容：
+{content}
+
+要求：
+1. 摘要控制在200-300字
+2. 詳細分析關鍵信息、數據和觀點
+3. 包含重要的細節和背景資訊
+4. 分析可能的影響和意義
+5. 保持客觀和準確
+6. 使用繁體中文
+7. 使用markdown格式加強可讀性
+
+詳細摘要："""
+            else:
+                prompt = f"""請為以下內容生成簡潔摘要，重點關注與"{objective.title}"相關的信息：
 
 內容：
 {content}
@@ -664,7 +805,7 @@ class SmartSearchEngine:
         
         return None
     
-    async def _call_cloud_llm(self, content: str, objective: TaskObjective) -> Optional[str]:
+    async def _call_cloud_llm(self, content: str, objective: TaskObjective, summary_type: str = "brief") -> Optional[str]:
         """調用雲端LLM"""
         try:
             # 這裡可以實現OpenAI或其他雲端LLM的調用
@@ -685,16 +826,23 @@ class SiteDiscoveryEngine:
         """根據任務目標發現相關網站"""
         logger.info(f"開始站點發現: {objective.title}")
         
+        # 第一步：LLM智慧推薦相關網站
+        llm_recommended_urls = await self._llm_recommend_websites(objective)
+        logger.info(f"LLM推薦了 {len(llm_recommended_urls)} 個網站")
+        
         # 生成搜尋策略
         search_queries = await self._generate_search_queries(objective)
         
         # 模擬搜尋結果（實際實作應該調用搜尋 API）
         candidate_urls = await self._simulate_search(search_queries)
         
-        # 過濾和評分
-        filtered_urls = self._filter_and_score_urls(candidate_urls, objective)
+        # 合併LLM推薦和搜尋結果
+        all_candidate_urls = list(set(llm_recommended_urls + candidate_urls))
         
-        logger.info(f"發現 {len(filtered_urls)} 個候選網站")
+        # 過濾和評分
+        filtered_urls = self._filter_and_score_urls(all_candidate_urls, objective)
+        
+        logger.info(f"總共發現 {len(filtered_urls)} 個候選網站 (包含LLM推薦 {len(llm_recommended_urls)} 個)")
         return filtered_urls
     
     async def _generate_search_queries(self, objective: TaskObjective) -> List[str]:
@@ -744,6 +892,70 @@ class SiteDiscoveryEngine:
         # 去重並限制數量
         unique_urls = list(set(filtered_urls))
         return unique_urls[:self.config.max_sites_per_engine]
+    
+    async def _llm_recommend_websites(self, objective: TaskObjective) -> List[str]:
+        """使用LLM推薦相關網站"""
+        try:
+            prompt = f"""
+根據以下任務內容，請推薦5-10個最相關的網站URL，這些網站應該能夠提供該主題的最新資訊和深度分析。
+
+任務標題: {objective.title}
+任務描述: {objective.description}
+關鍵字: {', '.join(objective.keywords)}
+
+請考慮以下因素：
+1. 網站的權威性和可信度
+2. 是否會有最新的相關資訊
+3. 內容的深度和專業性
+4. 針對該主題的專門報導
+
+請直接返回網站URL列表，每行一個，格式如下：
+https://example1.com
+https://example2.com
+...
+
+只返回URL，不要其他解釋文字。
+"""
+
+            logger.info("正在請求LLM推薦相關網站...")
+            
+            # 直接調用chat API
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 500,
+                    "temperature": 0.3
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=30.0
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get('choices') and len(result['choices']) > 0:
+                        content = result['choices'][0]['message']['content'].strip()
+                        
+                        # 解析URL列表
+                        urls = []
+                        for line in content.split('\n'):
+                            line = line.strip()
+                            if line.startswith('http'):
+                                urls.append(line)
+                        
+                        logger.info(f"LLM推薦了 {len(urls)} 個網站")
+                        return urls[:10]  # 限制最多10個
+                
+                logger.warning("LLM未返回有效的網站推薦")
+                return []
+            
+        except Exception as e:
+            logger.error(f"LLM網站推薦失敗: {e}")
+            return []
     
     def _is_valid_url(self, url: str) -> bool:
         """檢查 URL 是否有效"""
