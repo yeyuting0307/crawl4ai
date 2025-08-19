@@ -866,17 +866,6 @@ class SiteDiscoveryEngine:
         # 通用財經網站範例 - 使用通用模板而非特定股票
         financial_sites = [
             "https://finance.yahoo.com/",
-            "https://www.bloomberg.com/markets/stocks",
-            "https://seekingalpha.com/",
-            "https://www.marketwatch.com/investing/stock",
-            "https://www.fool.com/investing/",
-            "https://www.cnbc.com/markets/",
-            "https://www.reuters.com/markets/",
-            "https://www.morningstar.com/stocks",
-            "https://www.zacks.com/stocks",
-            "https://stockanalysis.com/",
-            "https://www.investing.com/",
-            "https://tw.stock.yahoo.com/"  # 台灣股市
         ]
         
         return financial_sites
@@ -1007,35 +996,91 @@ class TaskDrivenCrawler:
         self,
         objective: TaskObjective,
         additional_urls: Optional[List[str]] = None,
-        output_dir: str = "./crawl_results"
+        output_dir: str = "./crawl_results",
+        target_confidence: float = 0.8,  # 新增：目標信心度
+        max_iterations: int = 3  # 新增：最大迭代次數
     ) -> TaskResult:
-        """執行完整的任務驅動爬取流程"""
+        """執行完整的任務驅動爬取流程，包含動態信心度提升機制"""
         
         task_id = f"task_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         result = TaskResult(task_id=task_id, objective=objective)
         
         try:
             logger.info(f"開始執行任務: {objective.title}")
+            logger.info(f"目標信心度: {target_confidence:.1%}，最大迭代次數: {max_iterations}")
             result.status = "running"
             
-            # 階段一：站點發現
-            logger.info("=== 階段一：站點發現 ===")
-            discovered_urls = await self.discovery_engine.discover_sites(objective)
-            result.discovered_urls = discovered_urls
+            all_crawled_pages = []
+            iteration = 0
+            current_confidence = 0.0
             
-            # 合併手動追加的 URL
-            all_urls = discovered_urls.copy()
+            # 初始URL集合
+            current_urls = await self.discovery_engine.discover_sites(objective)
             if additional_urls:
                 valid_additional = [url for url in additional_urls if self._is_valid_url(url)]
-                all_urls.extend(valid_additional)
-                all_urls = list(set(all_urls))  # 去重
+                current_urls.extend(valid_additional)
+                current_urls = list(set(current_urls))
             
-            logger.info(f"總共 {len(all_urls)} 個種子 URL")
+            result.discovered_urls = current_urls.copy()
             
-            # 階段二：智慧爬取（新版本）
-            logger.info("=== 階段二：智慧爬取 ===")
-            all_pages = await self._smart_crawl_phase(all_urls, objective)
-            result.crawled_pages = len(all_pages)
+            while iteration < max_iterations and current_confidence < target_confidence:
+                iteration += 1
+                logger.info(f"=== 第 {iteration} 輪迭代 (目標信心度: {target_confidence:.1%}) ===")
+                
+                if iteration == 1:
+                    logger.info("=== 階段一：站點發現 ===")
+                    logger.info(f"總共 {len(current_urls)} 個種子 URL")
+                else:
+                    logger.info(f"=== 動態URL擴展 (第{iteration}輪) ===")
+                    logger.info(f"當前信心度: {current_confidence:.1%}，需要提升至: {target_confidence:.1%}")
+                
+                # 智慧爬取階段
+                logger.info("=== 階段二：智慧爬取 ===")
+                iteration_pages = await self._smart_crawl_phase(current_urls, objective)
+                all_crawled_pages.extend(iteration_pages)
+                
+                # 語意抽取階段
+                logger.info("=== 階段三：語意抽取 ===")
+                await self._extract_data_from_pages(all_crawled_pages, objective, result)
+                
+                # 計算當前信心度
+                current_confidence = self._calculate_enhanced_confidence(all_crawled_pages, objective)
+                logger.info(f"第 {iteration} 輪完成，當前信心度: {current_confidence:.2%}")
+                
+                # 檢查是否需要繼續迭代
+                if current_confidence >= target_confidence:
+                    logger.info(f"🎉 達到目標信心度 {target_confidence:.1%}！")
+                    break
+                elif iteration >= max_iterations:
+                    logger.info(f"⚠️  達到最大迭代次數 {max_iterations}，停止搜索")
+                    break
+                elif self._should_stop_iteration(all_crawled_pages, iteration, objective):
+                    logger.info("📊 滿足停止條件，結束迭代")
+                    break
+                else:
+                    # 動態追加新的URL
+                    logger.info("🔍 信心度未達標，請求LLM推薦更多相關網站...")
+                    new_urls = await self._get_dynamic_urls(objective, all_crawled_pages, current_confidence)
+                    
+                    if new_urls:
+                        # 過濾掉已經爬取過的URL
+                        crawled_urls = {page.url for page in all_crawled_pages}
+                        fresh_urls = [url for url in new_urls if url not in crawled_urls]
+                        
+                        if fresh_urls:
+                            current_urls = fresh_urls
+                            result.discovered_urls.extend(fresh_urls)
+                            logger.info(f"📈 追加 {len(fresh_urls)} 個新URL進行下一輪爬取")
+                        else:
+                            logger.info("❌ 無新URL可用，停止迭代")
+                            break
+                    else:
+                        logger.info("❌ LLM未推薦新URL，停止迭代")
+                        break
+            
+            # 最終處理
+            result.crawled_pages = len(all_crawled_pages)
+            result.confidence_score = current_confidence
             
             # 生成頁面摘要
             if objective.enable_content_summary:
@@ -1048,12 +1093,38 @@ class TaskDrivenCrawler:
                         "time_score": page.time_score,
                         "relevance_score": page.relevance_score,
                         "depth": page.depth,
-                        "found_via": page.found_via
+                        "found_via": page.found_via,
+                        "is_helpful": getattr(page, 'is_helpful', False),
+                        "helpfulness_score": getattr(page, 'helpfulness_score', 0.0),
+                        "helpfulness_reason": getattr(page, 'helpfulness_reason', '')
                     }
-                    for page in all_pages
+                    for page in all_crawled_pages
                 ]
             
-            # 階段三：語意抽取
+            # 生成最終摘要
+            if objective.output_format == "summary":
+                summary = await self._generate_summary_from_pages(all_crawled_pages, objective)
+                result.summary = summary
+            
+            # 統計信息
+            result.search_stats = self._generate_search_stats(all_crawled_pages)
+            result.helpfulness_stats = self._generate_helpfulness_stats(all_crawled_pages)
+            
+            result.status = "completed"
+            result.end_time = datetime.now()
+            result.execution_time = (result.end_time - result.start_time).total_seconds()
+            
+            # 保存結果
+            await self._save_results(result, output_dir)
+            
+            logger.info(f"任務完成！爬取 {result.crawled_pages} 個頁面，最終信心度: {result.confidence_score:.2%}")
+            return result
+            
+        except Exception as e:
+            result.status = "failed"
+            result.error_messages.append(str(e))
+            logger.error(f"任務執行失敗: {e}")
+            raise
             logger.info("=== 階段三：語意抽取 ===")
             if objective.output_format == "structured":
                 extracted_data = await self._extract_structured_data_from_pages(all_pages, objective)
@@ -1160,65 +1231,179 @@ class TaskDrivenCrawler:
         return extracted_items
     
     async def _extract_with_llm_enhanced(self, page: PageInfo, objective: TaskObjective) -> Optional[Dict]:
-        """使用增強的LLM抽取結構化資料"""
+        """使用增強的LLM抽取結構化資料，包含重試機制和JSON修復"""
         
-        # 構建更詳細的提示
-        prompt = f"""
-        從以下內容中抽取與 "{objective.title}" 相關的結構化資訊：
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                # 構建更嚴格的提示，確保JSON格式正確
+                prompt = f"""從以下內容中抽取與 "{objective.title}" 相關的結構化資訊。
 
-        任務描述: {objective.description}
-        關鍵字: {', '.join(objective.keywords)}
-        
-        頁面資訊:
-        標題: {page.title}
-        URL: {page.url}
-        發布時間: {page.publish_date.strftime('%Y-%m-%d') if page.publish_date else '未知'}
-        頁面摘要: {page.summary}
-        
-        內容:
-        {page.content[:3000]}
+任務描述: {objective.description}
+關鍵字: {', '.join(objective.keywords)}
 
-        請抽取以下資訊並以 JSON 格式返回：
-        {{
-            "title": "主題或標題",
-            "date": "日期（如果有）",
-            "key_points": ["關鍵要點1", "關鍵要點2"],
-            "data_points": ["重要數據1", "重要數據2"],
-            "predictions": ["預測或觀點1", "預測或觀點2"],
-            "sentiment": "positive/negative/neutral",
-            "confidence": 0.8,
-            "time_relevance": "新聞時效性評估",
-            "source_credibility": "來源可信度評估"
-        }}
+頁面資訊:
+標題: {page.title}
+URL: {page.url}
+發布時間: {page.publish_date.strftime('%Y-%m-%d') if page.publish_date else '未知'}
+頁面摘要: {page.summary}
 
-        只返回 JSON，不要其他文字。
-        """
-        
-        try:
-            # 使用智慧搜索引擎的LLM調用功能
-            response_text = await self.smart_search_engine._call_llm_for_summary(prompt, objective)
-            
-            if response_text:
-                # 清理響應並嘗試解析 JSON
-                clean_response = response_text.strip()
-                if clean_response.startswith('```json'):
-                    clean_response = clean_response[7:]
-                if clean_response.endswith('```'):
-                    clean_response = clean_response[:-3]
+內容:
+{page.content[:3000]}
+
+請嚴格按照以下JSON格式返回，注意所有字串必須用雙引號包圍，不要包含未轉義的換行符：
+
+{{
+    "title": "主題或標題",
+    "date": "日期格式YYYY-MM-DD或未知",
+    "key_points": ["關鍵要點1", "關鍵要點2", "關鍵要點3"],
+    "data_points": ["重要數據1", "重要數據2"],
+    "predictions": ["預測或觀點1", "預測或觀點2"],
+    "sentiment": "positive或negative或neutral",
+    "confidence": 0.8,
+    "time_relevance": "高或中或低",
+    "source_credibility": "高或中或低"
+}}
+
+重要：只返回有效的JSON格式，不要包含任何其他文字、解釋或markdown格式。"""
+
+                # 調用LLM
+                response_text = await self._call_llm_with_retry(prompt, objective)
                 
+                if response_text:
+                    # 多層次清理和修復JSON
+                    parsed_json = self._robust_json_parse(response_text)
+                    if parsed_json:
+                        # 驗證JSON結構的完整性
+                        if self._validate_extracted_data(parsed_json):
+                            return parsed_json
+                
+                logger.warning(f"第 {attempt + 1} 次抽取嘗試失敗，重試...")
+                
+            except Exception as e:
+                logger.error(f"第 {attempt + 1} 次抽取失敗: {e}")
+                
+        # 所有重試失敗，返回基本結構
+        logger.warning(f"LLM抽取最終失敗，返回基本結構")
+        return self._create_fallback_extraction(page)
+    
+    async def _call_llm_with_retry(self, prompt: str, objective: TaskObjective) -> Optional[str]:
+        """帶重試的LLM調用"""
+        try:
+            # 使用更嚴格的參數控制JSON輸出
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 800,
+                    "temperature": 0.1,  # 降低溫度確保一致性
+                    "top_p": 0.9,
+                    "frequency_penalty": 0.1
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=30.0
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get('choices') and len(result['choices']) > 0:
+                        return result['choices'][0]['message']['content'].strip()
+                        
+        except Exception as e:
+            logger.error(f"LLM調用失敗: {e}")
+            
+        return None
+    
+    def _robust_json_parse(self, response_text: str) -> Optional[Dict]:
+        """強化的JSON解析，包含多種修復策略"""
+        try:
+            # 第一步：基本清理
+            clean_response = response_text.strip()
+            
+            # 移除markdown標記
+            if clean_response.startswith('```json'):
+                clean_response = clean_response[7:]
+            elif clean_response.startswith('```'):
+                clean_response = clean_response[3:]
+            if clean_response.endswith('```'):
+                clean_response = clean_response[:-3]
+            
+            clean_response = clean_response.strip()
+            
+            # 第二步：尝试直接解析
+            try:
+                return json.loads(clean_response)
+            except json.JSONDecodeError as e:
+                logger.debug(f"直接解析失敗: {e}")
+            
+            # 第三步：修復常見JSON問題
+            # 移除末尾多餘的逗號
+            clean_response = re.sub(r',\s*}', '}', clean_response)
+            clean_response = re.sub(r',\s*]', ']', clean_response)
+            
+            # 修復未轉義的換行符
+            clean_response = clean_response.replace('\n', '\\n').replace('\r', '\\r')
+            
+            # 修復未轉義的引號
+            clean_response = re.sub(r'(?<!\\)"(?=.*")', '\\"', clean_response)
+            
+            try:
+                return json.loads(clean_response)
+            except json.JSONDecodeError as e:
+                logger.debug(f"修復後解析失敗: {e}")
+            
+            # 第四步：嘗試提取JSON片段
+            json_match = re.search(r'\{.*\}', clean_response, re.DOTALL)
+            if json_match:
                 try:
-                    return json.loads(clean_response.strip())
+                    return json.loads(json_match.group())
                 except json.JSONDecodeError:
-                    # 如果JSON解析失敗，嘗試修復常見問題
-                    clean_response = re.sub(r',\s*}', '}', clean_response)
-                    clean_response = re.sub(r',\s*]', ']', clean_response)
-                    return json.loads(clean_response.strip())
+                    pass
+            
+            return None
             
         except Exception as e:
-            logger.error(f"增強LLM抽取失敗: {e}")
+            logger.error(f"JSON解析錯誤: {e}")
             return None
+    
+    def _validate_extracted_data(self, data: Dict) -> bool:
+        """驗證抽取資料的完整性"""
+        required_fields = ['title', 'key_points', 'sentiment', 'confidence']
         
-        return None
+        for field in required_fields:
+            if field not in data:
+                logger.warning(f"缺少必要欄位: {field}")
+                return False
+        
+        # 確保列表欄位是真的列表
+        list_fields = ['key_points', 'data_points', 'predictions']
+        for field in list_fields:
+            if field in data and not isinstance(data[field], list):
+                data[field] = [str(data[field])] if data[field] else []
+        
+        # 確保confidence是數字
+        if not isinstance(data.get('confidence'), (int, float)):
+            data['confidence'] = 0.5
+        
+        return True
+    
+    def _create_fallback_extraction(self, page: PageInfo) -> Dict:
+        """創建後備抽取結果"""
+        return {
+            "title": page.title or "無標題",
+            "date": page.publish_date.strftime('%Y-%m-%d') if page.publish_date else "未知",
+            "key_points": [f"頁面內容摘要: {page.summary[:100]}..."] if page.summary else ["無關鍵要點"],
+            "data_points": [],
+            "predictions": [],
+            "sentiment": "neutral",
+            "confidence": 0.3,  # 低信心度反映這是後備結果
+            "time_relevance": "未評估",
+            "source_credibility": "未評估"
+        }
     
     async def _generate_summary_from_pages(self, pages: List[PageInfo], objective: TaskObjective) -> str:
         """從頁面信息生成摘要"""
@@ -1410,6 +1595,180 @@ class TaskDrivenCrawler:
         
         logger.info(f"結果已保存到: {output_dir}")
 
+    # 新增的輔助方法
+    async def _extract_data_from_pages(self, pages: List[PageInfo], objective: TaskObjective, result: TaskResult) -> None:
+        """從頁面中抽取結構化資料"""
+        extracted_data = []
+        
+        for page in pages:
+            try:
+                # 使用增強的LLM抽取
+                extracted = await self._extract_with_llm_enhanced(page, objective)
+                if extracted:
+                    # 添加頁面元信息
+                    extracted['source_url'] = page.url
+                    extracted['extracted_at'] = page.extracted_at.isoformat()
+                    extracted['is_helpful'] = getattr(page, 'is_helpful', False)
+                    extracted['helpfulness_score'] = getattr(page, 'helpfulness_score', 0.0)
+                    extracted['helpfulness_reason'] = getattr(page, 'helpfulness_reason', '')
+                    extracted_data.append(extracted)
+            except Exception as e:
+                logger.error(f"抽取頁面 {page.url} 資料失敗: {e}")
+        
+        result.extracted_data = extracted_data
+        logger.info(f"成功抽取了 {len(extracted_data)} 條結構化資料")
+    
+    def _should_stop_iteration(self, pages: List[PageInfo], iteration: int, objective: TaskObjective) -> bool:
+        """判斷是否應該停止迭代的條件"""
+        if not pages:
+            return True
+        
+        # 條件1：如果最近的頁面都沒有幫助內容
+        recent_pages = pages[-5:]  # 檢查最近5個頁面
+        helpful_recent = sum(1 for p in recent_pages if getattr(p, 'is_helpful', False))
+        if len(recent_pages) >= 5 and helpful_recent == 0:
+            logger.info("停止條件：最近5個頁面都無幫助內容")
+            return True
+        
+        # 條件2：信心度停滯不前
+        if len(pages) >= 10:
+            early_confidence = self._calculate_enhanced_confidence(pages[:5], objective)
+            recent_confidence = self._calculate_enhanced_confidence(pages[-5:], objective)
+            if recent_confidence - early_confidence < 0.05:  # 提升小於5%
+                logger.info("停止條件：信心度提升緩慢")
+                return True
+        
+        return False
+    
+    async def _llm_recommend_websites(self, task_title: str, keywords: List[str], max_sites: int = 5, content_gaps: str = "", current_confidence: float = 0.0) -> List[str]:
+        """請LLM推薦相關網站"""
+        try:
+            prompt = f"""針對任務「{task_title}」，請推薦 {max_sites} 個最權威且相關的網站URL。
+
+關鍵字: {', '.join(keywords)}
+當前信心度: {current_confidence:.1%}
+{f"內容缺口分析: {content_gaps}" if content_gaps else ""}
+
+請推薦能提供以下類型資訊的權威網站：
+1. 官方網站或政府機構
+2. 權威新聞媒體
+3. 專業分析機構
+4. 學術或研究機構
+5. 產業專家部落格
+
+要求：
+- 只返回URL列表，每行一個
+- 優先選擇可能包含最新和詳細資訊的網站
+- 確保網站的權威性和可信度
+"""
+
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 400,
+                    "temperature": 0.3
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=30.0
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    content = data['choices'][0]['message']['content']
+                    
+                    # 解析URL
+                    urls = []
+                    for line in content.strip().split('\n'):
+                        line = line.strip()
+                        if line.startswith('http'):
+                            urls.append(line)
+                    
+                    logger.info(f"LLM推薦了 {len(urls)} 個網站")
+                    return urls[:max_sites]
+                else:
+                    logger.error(f"LLM API調用失敗: {response.status_code}")
+                    
+        except Exception as e:
+            logger.error(f"LLM網站推薦失敗: {e}")
+        
+        return []
+    
+    async def _get_dynamic_urls(self, objective: TaskObjective, crawled_pages: List[PageInfo], current_confidence: float) -> List[str]:
+        """根據已爬取內容動態生成新的URL"""
+        try:
+            # 分析內容缺口
+            content_gaps = self._analyze_content_gaps(crawled_pages, objective)
+            
+            # 請求LLM推薦新的URL
+            new_urls = await self._llm_recommend_websites(
+                objective.title,
+                objective.keywords,
+                max_sites=3,  # 每次只追加少量URL避免過度擴張
+                content_gaps=content_gaps,
+                current_confidence=current_confidence
+            )
+            
+            return new_urls
+        except Exception as e:
+            logger.error(f"動態URL生成失敗: {e}")
+            return []
+    
+    def _analyze_content_gaps(self, pages: List[PageInfo], objective: TaskObjective) -> str:
+        """分析已爬取內容的缺口"""
+        try:
+            helpful_pages = [p for p in pages if getattr(p, 'is_helpful', False)]
+            
+            if not helpful_pages:
+                return "缺乏相關內容，需要尋找更多基礎資料"
+            
+            # 簡單的關鍵詞覆蓋分析
+            all_content = " ".join([p.content[:1000] for p in helpful_pages])
+            covered_keywords = []
+            missing_keywords = []
+            
+            for keyword in objective.keywords:
+                if keyword.lower() in all_content.lower():
+                    covered_keywords.append(keyword)
+                else:
+                    missing_keywords.append(keyword)
+            
+            gaps = []
+            if missing_keywords:
+                gaps.append(f"缺少關鍵字：{', '.join(missing_keywords)}")
+            
+            if len(helpful_pages) < 3:
+                gaps.append("需要更多相關資料來源")
+            
+            return "; ".join(gaps) if gaps else "內容較為完整，需要更深入的分析"
+            
+        except Exception as e:
+            logger.error(f"內容缺口分析失敗: {e}")
+            return "需要更多相關內容"
+
+    def _generate_helpfulness_stats(self, pages: List[PageInfo]) -> Dict[str, Any]:
+        """生成幫助度統計"""
+        try:
+            total_pages = len(pages)
+            helpful_pages = sum(1 for p in pages if getattr(p, 'is_helpful', False))
+            
+            helpfulness_scores = [getattr(p, 'helpfulness_score', 0.0) for p in pages]
+            avg_helpfulness = sum(helpfulness_scores) / len(helpfulness_scores) if helpfulness_scores else 0.0
+            
+            return {
+                'total_pages': total_pages,
+                'helpful_pages': helpful_pages,
+                'helpfulness_ratio': helpful_pages / total_pages if total_pages > 0 else 0.0,
+                'avg_helpfulness_score': avg_helpfulness
+            }
+        except Exception as e:
+            logger.error(f"幫助度統計生成失敗: {e}")
+            return {}
+
 # 便利函數
 async def create_task_crawler(llm_config: LLMConfig) -> TaskDrivenCrawler:
     """建立任務驅動爬蟲"""
@@ -1426,9 +1785,11 @@ async def quick_crawl_task(
     time_priority: bool = True,
     max_search_depth: int = 3,
     max_search_breadth: int = 10,
-    enable_content_summary: bool = True
+    enable_content_summary: bool = True,
+    target_confidence: float = 0.8,  # 新增：目標信心度
+    max_iterations: int = 3  # 新增：最大迭代次數
 ) -> TaskResult:
-    """快速執行爬取任務"""
+    """快速執行爬取任務，支援動態信心度提升"""
     
     objective = TaskObjective(
         title=title,
@@ -1442,7 +1803,13 @@ async def quick_crawl_task(
     )
     
     crawler = await create_task_crawler(llm_config)
-    return await crawler.execute_task(objective, additional_urls, output_dir)
+    return await crawler.execute_task(
+        objective, 
+        additional_urls, 
+        output_dir,
+        target_confidence=target_confidence,
+        max_iterations=max_iterations
+    )
 
 # 範例使用
 async def example_nvidia_analysis():
@@ -1510,6 +1877,189 @@ async def example_nvidia_analysis():
         if stats['date_range']['with_dates'] > 0:
             print(f"日期範圍: {stats['date_range']['earliest']} ~ {stats['date_range']['latest']}")
     
+    # 新增的輔助方法
+    async def _extract_data_from_pages(self, pages: List[PageInfo], objective: TaskObjective, result: TaskResult) -> None:
+        """從頁面中抽取結構化資料"""
+        extracted_data = []
+        
+        for page in pages:
+            try:
+                # 使用增強的LLM抽取
+                extracted = await self._extract_with_llm_enhanced(page, objective)
+                if extracted:
+                    # 添加頁面元信息
+                    extracted['source_url'] = page.url
+                    extracted['extracted_at'] = page.extracted_at.isoformat()
+                    extracted['is_helpful'] = getattr(page, 'is_helpful', False)
+                    extracted['helpfulness_score'] = getattr(page, 'helpfulness_score', 0.0)
+                    extracted['helpfulness_reason'] = getattr(page, 'helpfulness_reason', '')
+                    extracted_data.append(extracted)
+            except Exception as e:
+                logger.error(f"抽取頁面 {page.url} 資料失敗: {e}")
+        
+        result.extracted_data = extracted_data
+        logger.info(f"成功抽取了 {len(extracted_data)} 條結構化資料")
+    
+    def _should_stop_iteration(self, pages: List[PageInfo], iteration: int) -> bool:
+        """判斷是否應該停止迭代的條件"""
+        if not pages:
+            return True
+        
+        # 條件1：如果最近的頁面都沒有幫助內容
+        recent_pages = pages[-5:]  # 檢查最近5個頁面
+        helpful_recent = sum(1 for p in recent_pages if getattr(p, 'is_helpful', False))
+        if len(recent_pages) >= 5 and helpful_recent == 0:
+            logger.info("停止條件：最近5個頁面都無幫助內容")
+            return True
+        
+        # 條件2：信心度增長緩慢或停滯
+        if iteration >= 2:
+            # 檢查前後兩輪的信心度增長
+            mid_point = len(pages) // 2
+            first_half_confidence = self._calculate_enhanced_confidence(pages[:mid_point], None)
+            second_half_confidence = self._calculate_enhanced_confidence(pages[mid_point:], None)
+            
+            if second_half_confidence - first_half_confidence < 0.05:  # 增長少於5%
+                logger.info("停止條件：信心度增長緩慢")
+                return True
+        
+        # 條件3：資源耗盡限制
+        total_pages = len(pages)
+        if total_pages >= 50:  # 避免過度爬取
+            logger.info("停止條件：達到頁面數量上限")
+            return True
+        
+        return False
+    
+    async def _get_dynamic_urls(self, objective: TaskObjective, existing_pages: List[PageInfo], current_confidence: float) -> List[str]:
+        """動態獲取更多相關URL"""
+        try:
+            # 分析現有頁面的不足之處
+            analysis = self._analyze_content_gaps(existing_pages, objective)
+            
+            prompt = f"""基於當前爬取結果分析，任務 "{objective.title}" 的信心度只有 {current_confidence:.1%}，需要推薦更多高品質相關網站。
+
+任務描述: {objective.description}
+關鍵字: {', '.join(objective.keywords)}
+
+當前內容分析:
+{analysis}
+
+請推薦5-8個能夠補強以下方面的權威網站URL：
+1. 提供更深入的專業分析
+2. 包含最新的市場數據和趨勢
+3. 權威機構或專家觀點
+4. 技術細節和發展前景
+
+要求：
+- 只返回URL列表，每行一個
+- 選擇該領域最權威的網站
+- 優先推薦可能包含具體數據和分析的頁面
+- 避免推薦已爬取過的域名
+
+URL列表："""
+
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 400,
+                    "temperature": 0.3
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=30.0
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get('choices') and len(result['choices']) > 0:
+                        content = result['choices'][0]['message']['content'].strip()
+                        
+                        # 解析URL列表
+                        urls = []
+                        for line in content.split('\n'):
+                            line = line.strip()
+                            if line.startswith('http'):
+                                urls.append(line)
+                        
+                        logger.info(f"LLM推薦了 {len(urls)} 個新URL")
+                        return urls[:8]  # 限制最多8個
+            
+            return []
+            
+        except Exception as e:
+            logger.error(f"動態URL獲取失敗: {e}")
+            return []
+    
+    def _analyze_content_gaps(self, pages: List[PageInfo], objective: TaskObjective) -> str:
+        """分析內容缺口"""
+        if not pages:
+            return "無現有內容可分析"
+        
+        # 統計關鍵字覆蓋情況
+        keyword_coverage = {}
+        for keyword in objective.keywords:
+            coverage_count = 0
+            for page in pages:
+                content_text = f"{page.title} {page.summary} {page.content[:500]}".lower()
+                if keyword.lower() in content_text:
+                    coverage_count += 1
+            keyword_coverage[keyword] = coverage_count / len(pages)
+        
+        # 找出覆蓋不足的關鍵字
+        low_coverage_keywords = [k for k, v in keyword_coverage.items() if v < 0.3]
+        
+        # 分析幫助度分佈
+        helpful_count = sum(1 for p in pages if getattr(p, 'is_helpful', False))
+        helpful_ratio = helpful_count / len(pages) if pages else 0
+        
+        analysis = f"""
+當前內容分析：
+- 總頁面數: {len(pages)}
+- 有幫助頁面比例: {helpful_ratio:.1%}
+- 關鍵字覆蓋不足: {', '.join(low_coverage_keywords) if low_coverage_keywords else '無'}
+- 平均相關度: {sum(p.relevance_score for p in pages) / len(pages):.2f}
+        
+建議補強方向：
+1. 增加專業深度分析內容
+2. 尋找更多權威數據來源  
+3. 補充缺失關鍵字相關內容
+"""
+        return analysis.strip()
+    
+    def _generate_helpfulness_stats(self, pages: List[PageInfo]) -> Dict[str, Any]:
+        """生成幫助度統計信息"""
+        if not pages:
+            return {}
+        
+        helpful_count = sum(1 for p in pages if getattr(p, 'is_helpful', False))
+        total_count = len(pages)
+        avg_helpfulness = sum(getattr(p, 'helpfulness_score', 0.0) for p in pages) / total_count
+        
+        return {
+            'total_pages': total_count,
+            'helpful_pages': helpful_count,
+            'unhelpful_pages': total_count - helpful_count,
+            'helpfulness_ratio': helpful_count / total_count,
+            'avg_helpfulness_score': avg_helpfulness,
+            'helpful_pages_by_depth': self._count_helpful_by_depth(pages)
+        }
+    
+    def _count_helpful_by_depth(self, pages: List[PageInfo]) -> Dict[int, int]:
+        """統計各深度的有幫助頁面數量"""
+        depth_counts = {}
+        for page in pages:
+            depth = page.depth
+            if depth not in depth_counts:
+                depth_counts[depth] = 0
+            if getattr(page, 'is_helpful', False):
+                depth_counts[depth] += 1
+        return depth_counts
+
     return result
 
 if __name__ == "__main__":
