@@ -1,16 +1,3 @@
-"""
-任務驅動、自適應、語意理解型爬蟲系統
-
-主要功能：
-1. 自動發現目標網站 (Discovery Layer)
-2. 智慧爬蟲 (Crawl Layer) 
-3. 語意抽取 (LLM Extraction)
-4. 結構化輸出或重點摘要
-5. 時間優先度排序
-6. 智慧子頁面搜索
-7. 內容摘要生成
-"""
-
 import asyncio
 import json
 import os
@@ -47,9 +34,11 @@ class TaskObjective:
     schema: Optional[Dict] = None
     max_results: int = 50
     time_priority: bool = True  # 新增：是否啟用時間優先度
-    max_search_depth: int = 3  # 新增：最大搜索深度
+    max_search_depth: int = 5  # 增強：提高預設搜索深度到5層
     max_search_breadth: int = 10  # 新增：每層最大頁面數
     enable_content_summary: bool = True  # 新增：是否生成內容摘要
+    enable_dynamic_search: bool = True  # 新增：是否啟用動態搜索
+    search_strictness: str = "strict"  # 新增：搜索嚴格度 ("strict", "moderate", "relaxed")
     
     def to_search_query(self) -> str:
         """轉換為搜尋查詢"""
@@ -324,36 +313,376 @@ class SmartSearchEngine:
         return subpages
     
     async def _try_site_search(self, base_url: str, objective: TaskObjective) -> List[str]:
-        """嘗試站內搜索"""
+        """增強版站內搜索 - 使用LLM判斷搜索需求並執行動態搜索"""
+        search_urls = []
+        
+        if not objective.enable_dynamic_search:
+            return search_urls
+        
+        try:
+            # 第一步：使用LLM判斷是否需要在此網站進行搜索
+            search_decision = await self._llm_decide_search_strategy(base_url, objective)
+            
+            if not search_decision.get('should_search', False):
+                logger.info(f"LLM判斷 {base_url} 不需要進行站內搜索")
+                return search_urls
+            
+            logger.info(f"LLM判斷 {base_url} 需要進行站內搜索，策略: {search_decision.get('strategy', 'keyword_search')}")
+            
+            # 第二步：執行動態搜索
+            if search_decision.get('strategy') == 'direct_navigation':
+                # 直接導航到特定頁面
+                target_paths = search_decision.get('target_paths', [])
+                search_urls.extend(await self._try_direct_navigation(base_url, target_paths))
+            
+            elif search_decision.get('strategy') == 'keyword_search':
+                # 關鍵字搜索
+                search_keywords = search_decision.get('search_keywords', objective.keywords)
+                search_urls.extend(await self._try_keyword_search(base_url, search_keywords))
+            
+            elif search_decision.get('strategy') == 'interactive_search':
+                # 互動式搜索（模擬點擊和輸入）
+                search_urls.extend(await self._try_interactive_search(base_url, objective))
+            
+            # 第三步：驗證搜索結果品質
+            if search_urls:
+                verified_urls = await self._verify_search_results(search_urls, objective)
+                return verified_urls
+            
+        except Exception as e:
+            logger.error(f"增強版站內搜索失敗 {base_url}: {e}")
+        
+        return search_urls
+    
+    async def _llm_decide_search_strategy(self, base_url: str, objective: TaskObjective) -> Dict[str, Any]:
+        """使用LLM判斷搜索策略"""
+        try:
+            # 先快速爬取首頁內容進行分析
+            async with AsyncWebCrawler(verbose=False) as crawler:
+                config = CrawlerRunConfig(word_count_threshold=10, cache_mode=CacheMode.BYPASS)
+                result = await crawler.arun(url=base_url, config=config)
+                
+                # 動態處理結果，避免類型檢查問題
+                crawl_result = None
+                try:
+                    if hasattr(result, 'results'):
+                        crawl_result = getattr(result, 'results')[0]
+                    elif hasattr(result, '_results'):
+                        crawl_result = getattr(result, '_results')[0]
+                    else:
+                        crawl_result = result
+                except:
+                    crawl_result = result
+                
+                if not crawl_result or not getattr(crawl_result, 'success', False):
+                    return {'should_search': False}
+                
+                # 安全地獲取頁面內容
+                page_content = ""
+                try:
+                    if hasattr(crawl_result, 'markdown'):
+                        page_content = str(getattr(crawl_result, 'markdown', ''))[:3000]
+                    elif hasattr(crawl_result, 'cleaned_html'):
+                        page_content = str(getattr(crawl_result, 'cleaned_html', ''))[:3000]
+                    else:
+                        page_content = "無法獲取頁面內容"
+                except Exception as e:
+                    logger.warning(f"獲取頁面內容失敗: {e}")
+                    page_content = "內容獲取錯誤"
+                
+            prompt = f"""分析以下網站首頁內容，判斷是否需要進行站內搜索來完成任務目標。
+
+網站: {base_url}
+任務目標: {objective.title}
+任務描述: {objective.description}
+關鍵字: {', '.join(objective.keywords)}
+
+網站內容（前3000字）:
+{page_content}
+
+請根據以下判斷criteria分析：
+1. 網站是否包含與任務相關的內容
+2. 首頁是否已提供足夠資訊，還是需要深入搜索
+3. 網站是否有搜索功能或明確的導航結構
+4. 任務關鍵字在網站中的覆蓋程度
+
+請用JSON格式回應，包含：
+{{
+    "should_search": true/false,
+    "confidence": 0.0-1.0,
+    "strategy": "keyword_search/direct_navigation/interactive_search/none",
+    "reasoning": "判斷理由",
+    "search_keywords": ["關鍵字1", "關鍵字2"],
+    "target_paths": ["/path1", "/path2"],
+    "expected_depth": 1-5
+}}
+
+搜索策略說明：
+- keyword_search: 使用關鍵字在搜索框中搜索
+- direct_navigation: 直接訪問特定路徑或頁面
+- interactive_search: 需要模擬點擊和互動
+- none: 不需要搜索
+"""
+
+            response = await self._call_llm_api(prompt)
+            if response:
+                try:
+                    decision = json.loads(response.strip())
+                    return decision
+                except json.JSONDecodeError:
+                    logger.warning(f"LLM回應JSON解析失敗: {response[:200]}")
+            
+            return {'should_search': False}
+            
+        except Exception as e:
+            logger.error(f"LLM搜索策略判斷失敗: {e}")
+            return {'should_search': False}
+    
+    async def _try_keyword_search(self, base_url: str, keywords: List[str]) -> List[str]:
+        """嘗試關鍵字搜索"""
         search_urls = []
         domain = urlparse(base_url).netloc
         
-        # 常見的搜索URL模式
+        # 擴展的搜索URL模式
         search_patterns = [
             f"https://{domain}/search?q={{query}}",
             f"https://{domain}/search?query={{query}}",
             f"https://{domain}/?s={{query}}",
             f"https://{domain}/search/?q={{query}}",
+            f"https://{domain}/search.php?q={{query}}",
+            f"https://{domain}/search.html?q={{query}}",
+            f"https://{domain}/site-search?query={{query}}",
+            f"http://{domain}/search?q={{query}}",  # HTTP 版本
         ]
         
-        query = "+".join(objective.keywords[:3])  # 使用前3個關鍵字
-        
-        for pattern in search_patterns:
-            try:
-                search_url = pattern.format(query=query)
-                
-                # 簡單檢查搜索頁面是否存在
-                async with httpx.AsyncClient(timeout=10) as client:
-                    response = await client.head(search_url)
-                    if response.status_code == 200:
-                        # 這裡應該解析搜索結果頁面，簡化為返回搜索URL
-                        search_urls.append(search_url)
-                        break  # 找到一個可用的搜索就夠了
-                        
-            except Exception:
-                continue
+        # 為每個關鍵字組合嘗試搜索
+        for i, keyword in enumerate(keywords[:3]):  # 限制前3個關鍵字
+            query = keyword.replace(' ', '+')
+            
+            for pattern in search_patterns:
+                search_url = None  # 初始化變量
+                try:
+                    search_url = pattern.format(query=query)
+                    
+                    # 驗證搜索頁面是否存在且返回有效內容
+                    async with httpx.AsyncClient(timeout=15) as client:
+                        response = await client.get(search_url, follow_redirects=True)
+                        if response.status_code == 200 and len(response.text) > 1000:
+                            # 檢查是否真的是搜索結果頁面
+                            if self._is_search_results_page(response.text, keyword):
+                                search_urls.append(search_url)
+                                logger.info(f"找到有效搜索URL: {search_url}")
+                                break  # 找到一個有效搜索就繼續下一個關鍵字
+                                
+                except Exception as e:
+                    logger.debug(f"搜索URL測試失敗 {search_url or 'unknown'}: {e}")
+                    continue
         
         return search_urls
+    
+    async def _try_direct_navigation(self, base_url: str, target_paths: List[str]) -> List[str]:
+        """嘗試直接導航到特定路徑"""
+        navigation_urls = []
+        
+        for path in target_paths:
+            try:
+                # 構建完整URL
+                if path.startswith('/'):
+                    full_url = urljoin(base_url, path)
+                elif path.startswith('http'):
+                    full_url = path
+                else:
+                    full_url = urljoin(base_url, '/' + path)
+                
+                # 驗證URL是否有效
+                async with httpx.AsyncClient(timeout=10) as client:
+                    response = await client.head(full_url)
+                    if response.status_code == 200:
+                        navigation_urls.append(full_url)
+                        logger.info(f"成功導航到: {full_url}")
+                        
+            except Exception as e:
+                logger.debug(f"直接導航失敗 {path}: {e}")
+                continue
+        
+        return navigation_urls
+    
+    async def _try_interactive_search(self, base_url: str, objective: TaskObjective) -> List[str]:
+        """嘗試互動式搜索（模擬用戶行為）"""
+        try:
+            # 這裡可以整合 Playwright 或 Selenium 來模擬真實用戶互動
+            # 現階段先實現基本的互動邏輯
+            
+            interactive_urls = []
+            
+            # 使用 AsyncWebCrawler 的 JavaScript 執行功能
+            js_code = f"""
+            // 嘗試找到搜索框並輸入關鍵字
+            const searchKeywords = {json.dumps(objective.keywords[:2])};
+            const searchSelectors = [
+                'input[type="search"]',
+                'input[name*="search"]',
+                'input[id*="search"]',
+                'input[placeholder*="搜"]',
+                'input[placeholder*="Search"]'
+            ];
+            
+            let searchResults = [];
+            
+            for (let keyword of searchKeywords) {{
+                for (let selector of searchSelectors) {{
+                    const searchInput = document.querySelector(selector);
+                    if (searchInput) {{
+                        searchInput.value = keyword;
+                        
+                        // 嘗試找到搜索按鈕
+                        const submitSelectors = [
+                            'button[type="submit"]',
+                            'input[type="submit"]',
+                            'button:contains("搜索")',
+                            'button:contains("Search")',
+                            '.search-button',
+                            '#search-button'
+                        ];
+                        
+                        for (let submitSelector of submitSelectors) {{
+                            const submitBtn = document.querySelector(submitSelector);
+                            if (submitBtn) {{
+                                // 模擬點擊（實際環境中會觸發導航）
+                                const form = searchInput.closest('form');
+                                if (form) {{
+                                    const action = form.action || window.location.href;
+                                    const method = form.method || 'GET';
+                                    searchResults.push({{
+                                        action: action,
+                                        keyword: keyword,
+                                        method: method
+                                    }});
+                                }}
+                                break;
+                            }}
+                        }}
+                        break;
+                    }}
+                }}
+            }}
+            
+            return searchResults;
+            """
+            
+            async with AsyncWebCrawler(verbose=False) as crawler:
+                config = CrawlerRunConfig(
+                    js_code=js_code,
+                    word_count_threshold=10,
+                    cache_mode=CacheMode.BYPASS
+                )
+                result = await crawler.arun(url=base_url, config=config)
+                
+                # 解析 JavaScript 執行結果
+                crawl_result = None
+                try:
+                    if hasattr(result, 'results'):
+                        crawl_result = getattr(result, 'results')[0]
+                    elif hasattr(result, '_results'):
+                        crawl_result = getattr(result, '_results')[0]
+                    else:
+                        crawl_result = result
+                except:
+                    crawl_result = result
+                
+                if crawl_result and hasattr(crawl_result, 'js_execution_result'):
+                    js_result = getattr(crawl_result, 'js_execution_result', None)
+                    if js_result and isinstance(js_result, list):
+                        for search_info in js_result:
+                            if isinstance(search_info, dict) and 'action' in search_info:
+                                search_url = search_info['action']
+                                keyword = search_info.get('keyword', '')
+                                
+                                # 構建搜索URL
+                                if '?' in search_url:
+                                    search_url += f"&q={keyword}"
+                                else:
+                                    search_url += f"?q={keyword}"
+                                
+                                interactive_urls.append(search_url)
+            
+            return interactive_urls
+            
+        except Exception as e:
+            logger.error(f"互動式搜索失敗 {base_url}: {e}")
+            return []
+    
+    def _is_search_results_page(self, html_content: str, keyword: str) -> bool:
+        """判斷是否為搜索結果頁面"""
+        # 檢查常見的搜索結果頁面特徵
+        search_indicators = [
+            'search results',
+            '搜索結果',
+            '搜尋結果', 
+            f'results for {keyword}',
+            f'{keyword} 的搜索結果',
+            'results found',
+            '找到.*結果',
+            'search-result',
+            'search_result'
+        ]
+        
+        html_lower = html_content.lower()
+        return any(indicator.lower() in html_lower for indicator in search_indicators)
+    
+    async def _verify_search_results(self, search_urls: List[str], objective: TaskObjective) -> List[str]:
+        """驗證搜索結果的品質"""
+        verified_urls = []
+        
+        for url in search_urls:
+            try:
+                async with httpx.AsyncClient(timeout=10) as client:
+                    response = await client.get(url)
+                    if response.status_code == 200:
+                        # 簡單的內容相關性檢查
+                        content = response.text.lower()
+                        keyword_matches = sum(1 for keyword in objective.keywords 
+                                            if keyword.lower() in content)
+                        
+                        # 如果匹配到至少一個關鍵字，認為是有效的搜索結果
+                        if keyword_matches > 0:
+                            verified_urls.append(url)
+                            
+            except Exception as e:
+                logger.debug(f"搜索結果驗證失敗 {url}: {e}")
+                continue
+        
+        logger.info(f"驗證了 {len(search_urls)} 個搜索URL，其中 {len(verified_urls)} 個有效")
+        return verified_urls
+    
+    async def _call_llm_api(self, prompt: str) -> Optional[str]:
+        """調用LLM API的通用方法"""
+        try:
+            async with httpx.AsyncClient() as client:
+                payload = {
+                    "model": "openai/gpt-oss-20b",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 500,
+                    "temperature": 0.2
+                }
+                
+                response = await client.post(
+                    f"{self.llm_config.base_url}/chat/completions",
+                    json=payload,
+                    headers={"Authorization": f"Bearer {self.llm_config.api_token}"},
+                    timeout=30.0
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    return data['choices'][0]['message']['content']
+                else:
+                    logger.error(f"LLM API調用失敗: {response.status_code}")
+                    return None
+                    
+        except Exception as e:
+            logger.error(f"LLM API調用異常: {e}")
+            return None
     
     async def _extract_relevant_links(
         self, 
@@ -1619,23 +1948,89 @@ URL: {page.url}
         logger.info(f"成功抽取了 {len(extracted_data)} 條結構化資料")
     
     def _should_stop_iteration(self, pages: List[PageInfo], iteration: int, objective: TaskObjective) -> bool:
-        """判斷是否應該停止迭代的條件"""
+        """增強版停止條件判斷 - 根據搜索嚴格度調整"""
         if not pages:
             return True
         
-        # 條件1：如果最近的頁面都沒有幫助內容
-        recent_pages = pages[-5:]  # 檢查最近5個頁面
-        helpful_recent = sum(1 for p in recent_pages if getattr(p, 'is_helpful', False))
-        if len(recent_pages) >= 5 and helpful_recent == 0:
-            logger.info("停止條件：最近5個頁面都無幫助內容")
-            return True
+        # 根據搜索嚴格度調整參數
+        strictness = getattr(objective, 'search_strictness', 'moderate')
         
-        # 條件2：信心度停滯不前
-        if len(pages) >= 10:
-            early_confidence = self._calculate_enhanced_confidence(pages[:5], objective)
-            recent_confidence = self._calculate_enhanced_confidence(pages[-5:], objective)
-            if recent_confidence - early_confidence < 0.05:  # 提升小於5%
-                logger.info("停止條件：信心度提升緩慢")
+        if strictness == "strict":
+            recent_check_pages = 15  # 嚴格模式：檢查最近15頁
+            confidence_check_pages = 25  # 嚴格模式：檢查最近25頁信心度
+            min_confidence_improvement = 0.08  # 需要8%的信心度提升
+            max_unhelpful_ratio = 0.2  # 最多允許20%的無幫助頁面
+        elif strictness == "relaxed":
+            recent_check_pages = 30  # 寬鬆模式：檢查最近30頁
+            confidence_check_pages = 40  # 寬鬆模式：檢查最近40頁信心度
+            min_confidence_improvement = 0.03  # 需要3%的信心度提升
+            max_unhelpful_ratio = 0.4  # 最多允許40%的無幫助頁面
+        else:  # moderate
+            recent_check_pages = 20  # 中等模式：檢查最近20頁
+            confidence_check_pages = 30  # 中等模式：檢查最近30頁信心度
+            min_confidence_improvement = 0.05  # 需要5%的信心度提升
+            max_unhelpful_ratio = 0.3  # 最多允許30%的無幫助頁面
+        
+        # 條件1：檢查最近頁面的幫助度比例
+        recent_pages = pages[-recent_check_pages:]
+        if len(recent_pages) >= recent_check_pages:
+            helpful_recent = sum(1 for p in recent_pages if getattr(p, 'is_helpful', False))
+            unhelpful_ratio = 1 - (helpful_recent / len(recent_pages))
+            
+            if unhelpful_ratio > max_unhelpful_ratio:
+                logger.info(f"停止條件：最近{recent_check_pages}個頁面中{unhelpful_ratio:.1%}無幫助（超過{max_unhelpful_ratio:.1%}閾值）")
+                return True
+        
+        # 條件2：檢查信心度增長趨勢
+        if len(pages) >= confidence_check_pages:
+            early_confidence = self._calculate_enhanced_confidence(pages[:confidence_check_pages//2], objective)
+            recent_confidence = self._calculate_enhanced_confidence(pages[-confidence_check_pages//2:], objective)
+            confidence_improvement = recent_confidence - early_confidence
+            
+            if confidence_improvement < min_confidence_improvement:
+                logger.info(f"停止條件：信心度提升僅{confidence_improvement:.2%}（低於{min_confidence_improvement:.1%}閾值）")
+                return True
+        
+        # 條件3：動態搜索特定條件
+        if getattr(objective, 'enable_dynamic_search', True):
+            # 如果啟用動態搜索，增加更嚴格的條件
+            
+            # 檢查深度分佈 - 如果深度過深但收益遞減
+            depth_distribution = {}
+            for page in pages:
+                depth = getattr(page, 'depth', 0)
+                if depth not in depth_distribution:
+                    depth_distribution[depth] = {'total': 0, 'helpful': 0}
+                depth_distribution[depth]['total'] += 1
+                if getattr(page, 'is_helpful', False):
+                    depth_distribution[depth]['helpful'] += 1
+            
+            # 如果深度3以上的頁面幫助度低於20%，停止深入
+            deep_pages = [info for depth, info in depth_distribution.items() if depth >= 3]
+            if deep_pages:
+                total_deep = sum(info['total'] for info in deep_pages)
+                helpful_deep = sum(info['helpful'] for info in deep_pages)
+                if total_deep >= 10 and (helpful_deep / total_deep) < 0.2:
+                    logger.info(f"停止條件：深度3+頁面幫助度過低（{helpful_deep}/{total_deep} = {helpful_deep/total_deep:.1%}）")
+                    return True
+        
+        # 條件4：檢查關鍵字覆蓋停滯
+        if len(pages) >= 20:
+            # 分析關鍵字在內容中的覆蓋情況
+            early_pages = pages[:len(pages)//2]
+            recent_pages = pages[len(pages)//2:]
+            
+            def get_keyword_coverage(page_list):
+                all_content = " ".join([getattr(p, 'content', '')[:500] for p in page_list])
+                covered = sum(1 for kw in objective.keywords if kw.lower() in all_content.lower())
+                return covered / len(objective.keywords) if objective.keywords else 0
+            
+            early_coverage = get_keyword_coverage(early_pages)
+            recent_coverage = get_keyword_coverage(recent_pages)
+            
+            # 如果關鍵字覆蓋沒有改善且低於閾值，停止
+            if early_coverage > 0 and recent_coverage <= early_coverage and recent_coverage < 0.7:
+                logger.info(f"停止條件：關鍵字覆蓋停滯（早期:{early_coverage:.1%}，近期:{recent_coverage:.1%}）")
                 return True
         
         return False
@@ -1783,13 +2178,15 @@ async def quick_crawl_task(
     additional_urls: Optional[List[str]] = None,
     output_dir: str = "./crawl_results",
     time_priority: bool = True,
-    max_search_depth: int = 3,
+    max_search_depth: int = 5,  # 提高預設搜索深度到5層
     max_search_breadth: int = 10,
     enable_content_summary: bool = True,
+    enable_dynamic_search: bool = True,  # 新增：啟用動態搜索
+    search_strictness: str = "strict",  # 新增：嚴格搜索模式
     target_confidence: float = 0.8,  # 新增：目標信心度
     max_iterations: int = 3  # 新增：最大迭代次數
 ) -> TaskResult:
-    """快速執行爬取任務，支援動態信心度提升"""
+    """快速執行爬取任務，支援動態信心度提升和智慧搜索"""
     
     objective = TaskObjective(
         title=title,
@@ -1799,7 +2196,9 @@ async def quick_crawl_task(
         time_priority=time_priority,
         max_search_depth=max_search_depth,
         max_search_breadth=max_search_breadth,
-        enable_content_summary=enable_content_summary
+        enable_content_summary=enable_content_summary,
+        enable_dynamic_search=enable_dynamic_search,
+        search_strictness=search_strictness
     )
     
     crawler = await create_task_crawler(llm_config)

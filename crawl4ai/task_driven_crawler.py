@@ -1,20 +1,3 @@
-"""
-任務驅動、自適應、語意理解型爬蟲系統
-
-這個系統可以：
-1. 自動發現目標網站 (Discovery Layer)
-2. 智慧爬蟲 (Crawl Layer) 
-3. 語意抽取 (LLM Extraction)
-4. 結構化輸出或重點摘要
-
-主要功能：
-- 根據任務目標自動找到候選網站
-- 使用 AdaptiveCrawler 智慧判斷爬取深度
-- 透過 LLM 進行語意理解和資訊抽取
-- 支援手動追加 URL
-- 輸出結構化資料或自然語言摘要
-"""
-
 import asyncio
 import json
 import os
