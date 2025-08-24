@@ -1,0 +1,1815 @@
+{
+  "task_id": "task_20250822_083028",
+  "objective": {
+    "title": "AI工程師職缺收集",
+    "description": "收集所有跟AI工程師的職缺，5年以上經驗，地點在台灣台北或新北，上市公司或外商，並統整這些職缺所需要技能技術與能力",
+    "keywords": [
+      "AI Engineer",
+      "ML Engineer"
+    ],
+    "target_domains": [],
+    "exclude_domains": [],
+    "output_format": "structured",
+    "schema": null,
+    "max_results": 50,
+    "time_priority": true,
+    "max_search_depth": 5,
+    "max_search_breadth": 10,
+    "enable_content_summary": true,
+    "enable_dynamic_search": true,
+    "search_strictness": "strict"
+  },
+  "discovered_urls": [
+    "https://www.glassdoor.com/Job/taiwan-ai-engineer-jobs-SRCH_IL.0,6_IC3278601_KO7,20.htm",
+    "https://jobs.microsoft.com/en-us/search?keywords=AI%20Engineer&location=Taipei%2C+New+Taiwan",
+    "https://www104.com.tw/jobs/keyword?kwd=%E6%95%B0%E7%94%A8%E6%9C%BA%E5%AD%90%E5%B7%A5%E7%A8%8B%E5%B8%AB&location=Taipei%2C+New+Taiwan",
+    "https://www.linkedin.com/jobs/search/?keywords=AI%20Engineer&location=%E5%8F%B0%E7%81%A3%E5%8C%97%E5%9C%92%E5%8D%80&distance=25",
+    "https://jobsdb.com/tw/en/search?keyword=AI+Engineer&location=Taipei%2C+New+Taiwan",
+    "https://finance.yahoo.com/",
+    "https://www1111.com.tw/jobsearch/keyword?kwd=%E4%BB%8A%E6%97%B6%E5%9F%BA%E7%A4%84AI%E5%B7%A5%E7%A8%8B%E5%B8%AB&location=Taipei",
+    "https://tw.indeed.com/q-AI-Engineer-l-Taipei,-New-Taiwan-jobs.html",
+    "https://careers.google.com/jobs/results/?company=Google&location=Taiwan&category=AI%20Engineer"
+  ],
+  "crawled_pages": 50,
+  "extracted_data": [
+    {
+      "title": "AI Engineer職缺收集概覽（美國）",
+      "date": "未知",
+      "key_points": [
+        "總職缺數超過17,000個",
+        "主要公司包括Netflix、Nuro、X (The Moonshot Factory)、Vectra AI、Toyota Research Institute等",
+        "工作類型以全職為主，兼有兼職、合約與臨時職缺"
+      ],
+      "data_points": [
+        "全職15,798；兼職235；合約1,026；臨時26",
+        "Netflix 29個職缺；Nuro 15個職缺；X 7個職缺"
+      ],
+      "predictions": [
+        "美國AI工程師需求持續高漲，未來數月仍有大量招聘機會",
+        "台北/新北地區若符合條件的上市公司或外商亦可能吸引此類人才"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "中",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Engineer&location=%E5%8F%B0%E7%81%A3%E5%8C%97%E5%9C%92%E5%8D%80&distance=25",
+      "extracted_at": "2025-08-22T08:30:54.762773",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "title": "AI/ML Engineer (Multiple roles and seniority levels)",
+      "date": "未知",
+      "key_points": [
+        "職缺於台北招募",
+        "涵蓋機器學習模型開發與安全分析",
+        "多個角色與不同級別"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai-4267588494?pagenum=0&position=7&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=8nF%2BzANrIor73EXOARHg2g%3D%3D",
+      "extracted_at": "2025-08-22T08:32:36.326578",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州聖荷西，與任務要求的台北/新北地點不符；且未提及經驗年限或公司類型，資訊對收集符合條件的 AI 工程師職缺幾乎無實質價值。"
+    },
+    {
+      "title": "AI/ML Engineer",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-snowrelic-inc-4283409264?pagenum=0&position=16&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=jQgZHvhQqzaV0f7UkNRoSA%3D%3D",
+      "extracted_at": "2025-08-22T08:34:06.672971",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州聖荷西，與任務目標要求的台灣台北或新北地點不符；且未提及5年以上經驗、上市公司或外商條件，資訊對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "title": "Fay hiring AI Engineer in San Francisco, CA",
+      "date": "未知",
+      "key_points": [
+        "職位：AI Engineer",
+        "公司：Fay (Food & You)",
+        "位置：台北（或遠距）",
+        "招聘平台：LinkedIn"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-fay-4283973562?pagenum=0&position=17&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=05UOP%2BhdBh0Jknm%2BoeRFIw%3D%3D",
+      "extracted_at": "2025-08-22T08:35:36.944993",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖位於台北或遠距，但未明示需5年以上經驗，且公司是否上市或外商不確定。資訊僅提供基本職稱與位置，缺乏關鍵技能、公司背景及年資要求，對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "title": "AI/ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "職位為 AI/ML 工程師",
+        "公司為 StackAI",
+        "主要負責機器學習模型開發與部署"
+      ],
+      "data_points": [
+        "機器學習模型開發",
+        "模型部署"
+      ],
+      "predictions": [
+        "此職缺可能需要5年以上經驗",
+        "適合在台北或新北的上市公司或外商申請"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-stackai-4252371940?pagenum=0&position=24&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=RWj3LzIP%2BckV1S5kcn14Ag%3D%3D",
+      "extracted_at": "2025-08-22T08:37:04.731458",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並未符合台北或新北地點要求；且沒有明確說明5年以上經驗及上市公司/外商條件。內容與任務目標高度不相關，資訊價值有限，時效性亦無法滿足需求。"
+    },
+    {
+      "title": "AI / ML Engineer OR Data Scientist",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-or-data-scientist-at-veracity-software-inc-4260309062?pagenum=0&position=33&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=bzeuZY6BHyK8LexmqF%2FvjQ%3D%3D",
+      "extracted_at": "2025-08-22T08:38:15.809916",
+      "is_helpful": true,
+      "helpfulness_score": 0.6,
+      "helpfulness_reason": "該職缺符合地點（台北）且屬於 AI/ML Engineer，雖未明示經驗年限，但仍可作為資料來源之一。資訊提供了職務內容與招聘平台，可協助後續整理技能需求。"
+    },
+    {
+      "title": "Instawork hiring ML Engineer in San Francisco, CA",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國加州舊金山",
+        "雇主為 Instawork",
+        "職稱為ML Engineer"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.3,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-instawork-4271043001?pagenum=0&position=40&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=Ikoq577xTBqj6S6CajhAdQ%3D%3D",
+      "extracted_at": "2025-08-22T08:39:06.152468",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣地區；且未符合5年以上經驗、上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性均不足以協助收集所需職缺。"
+    },
+    {
+      "title": "AI Engineer職缺收集",
+      "date": "未知",
+      "key_points": [
+        "未找到符合條件的職缺資訊"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-landbase-4138518251?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=MuiLJ661p2M6LYXoevcc8g%3D%3D",
+      "extracted_at": "2025-08-22T08:40:57.281604",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合地點、公司類型或經驗年限條件，對收集台灣台北/新北上市公司或外商的 AI 工程師職缺幾乎無實質協助。"
+    },
+    {
+      "title": "AI/ML Engineer",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-snowrelic-inc-4283409264?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=DW9SgAnOlrTEPPvDoUL%2BQg%3D%3D",
+      "extracted_at": "2025-08-22T08:41:06.997246",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。資訊對收集台灣AI工程師職缺幾乎無用，時效性亦有限。"
+    },
+    {
+      "title": "Applied ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "職缺：Applied ML Engineer（AI 工程師）",
+        "公司：Kognitos，總部位於美國加州聖荷西",
+        "位置：台北（LinkedIn 列示）"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/applied-ml-engineer-at-kognitos-4181101118?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=AM5FU8ZyI%2B8SznujYmJIlA%3D%3D",
+      "extracted_at": "2025-08-22T08:41:16.482695",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖標示為 AI 工程師，但位置顯示為美國加州聖荷西，且未明確說明需5年以上經驗或台北/新北地點。資訊與任務目標不符，缺乏關鍵條件及完整性，時效性亦無法確認。"
+    },
+    {
+      "title": "Early-Career Applied ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "職缺位於台北",
+        "公司為Kognitos，屬於外商或上市公司待確認",
+        "職稱為早期職涯機器學習工程師，與5年以上經驗需求不符"
+      ],
+      "data_points": [
+        "工作地點：台北",
+        "公司名稱：Kognitos"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上經驗的AI工程師條件",
+        "若需收集符合條件的職缺，需要尋找其他來源或更新篩選標準"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/early-career-applied-ml-engineer-at-kognitos-4167331182?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=8bZoEMDyQIQO8ZTj9mZw2w%3D%3D",
+      "extracted_at": "2025-08-22T08:41:29.026423",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺為 Early‑Career Applied ML Engineer，並非5年以上經驗的 AI 工程師；雖然地點在台北，但不符合上市公司或外商條件。內容對收集符合任務目標的職缺幫助有限。"
+    },
+    {
+      "title": "PHIZENIX hiring ML Engineer in Menlo Park, CA",
+      "date": "未知",
+      "key_points": [
+        "ML Engineer職缺於美國加州Menlo Park",
+        "公司為PHIZENIX，招聘機器學習工程師",
+        "發布時間兩個月前"
+      ],
+      "data_points": [
+        "薪資範圍$180,000.00/yr - $200,000.00/yr"
+      ],
+      "predictions": [
+        "此職缺不符合台北或新北地點要求",
+        "未滿5年以上經驗條件"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-phizenix-4248633715?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=lIh1tdMF4vP0FiCgkIDKQA%3D%3D",
+      "extracted_at": "2025-08-22T08:41:39.893183",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，與台北/新北地點不符；未提及5年以上經驗要求，也未提供上市公司或外商背景資訊。內容與任務目標高度不相關，且缺乏可用的技能需求細節，故評估為不幫助且分數低。"
+    },
+    {
+      "title": "Gauss Labs hiring AI Engineer - Machine Learning (US) in Palo Alto, CA",
+      "date": "未知",
+      "key_points": [
+        "AI Engineer職缺於Gauss Labs（Palo Alto, CA）",
+        "工作內容涵蓋模型開發、資料處理與部署；需具備Python、TensorFlow/PyTorch 與雲端平台經驗"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-machine-learning-us-at-gauss-labs-4251982302?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=SoGjyJE2SC84eFNPRKhbSQ%3D%3D",
+      "extracted_at": "2025-08-22T08:41:51.505555",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，且未符合台北/新北、上市公司或外商以及5年以上經驗的條件，資訊與任務目標高度不相關。"
+    },
+    {
+      "title": "AI/ML Engineer (Multiple roles and seniority levels)",
+      "date": "未知",
+      "key_points": [
+        "職缺位於台北，隸屬美國矽谷公司Vectra AI",
+        "涵蓋初階至高階工程師，多個職級需求",
+        "要求機器學習、資料處理與模型部署經驗"
+      ],
+      "data_points": [
+        "多個角色及不同 seniority levels"
+      ],
+      "predictions": [
+        "台北地區對AI/ML工程師的需求持續上升",
+        "上市公司或外商在此類職缺中佔較高比例"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai-4267588494?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=m%2Bs%2FHANSqM0VEPYHM5CUvQ%3D%3D",
+      "extracted_at": "2025-08-22T08:42:49.165425",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國矽谷，與任務要求的台北或新北地點不符；且未明示是否符合5年以上經驗及上市公司/外商條件。資訊雖提供職缺概述，但對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "title": "ML Engineer at Landbase",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國加州Mountain View，非台北或新北",
+        "僅為ML Engineer職缺，未提及5年以上經驗條件",
+        "雇主為Landbase，屬於外商公司"
+      ],
+      "data_points": [
+        "地點：Mountain View, CA",
+        "公司：Landbase"
+      ],
+      "predictions": [
+        "此職缺不符合收集AI工程師台灣台北/新北、上市或外商且5年以上經驗的條件",
+        "若需符合條件，須搜尋其他來源"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.6,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-landbase-4138518251?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=MaFQrKfQHyjvMpG5tPKQ%2BQ%3D%3D",
+      "extracted_at": "2025-08-22T08:43:01.026035",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，與台北/新北地點不符；未提及5年以上經驗要求，也無上市公司或外商背景資訊。內容與任務目標高度不相關，且缺乏可用的技能需求細節，故評估為不幫助且分數低。"
+    },
+    {
+      "title": "Kognitos hiring Applied ML Engineer in San Jose, CA",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/applied-ml-engineer-at-kognitos-4181101118?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=%2BPszru4ZlA3vrHSfTXGJaQ%3D%3D",
+      "extracted_at": "2025-08-22T08:43:11.643083",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合\"台北或新北、上市公司/外商、5年以上經驗\"的條件，內容與收集AI工程師職缺的任務目標高度不相關。"
+    },
+    {
+      "title": "Early‑Career Applied ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "職位為 Early-Career Applied ML Engineer，屬 AI/ML 工程師類別",
+        "工作地點台北",
+        "公司 Kognitos 位於 San Jose, CA，但在台北招聘",
+        "此職缺針對早期職涯人才，未符合 5 年以上經驗要求"
+      ],
+      "data_points": [
+        "職位名稱：Early‑Career Applied ML Engineer",
+        "公司：Kognitos",
+        "工作地點：台北"
+      ],
+      "predictions": [
+        "此職缺不符收集條件（5年以上經驗、上市/外商）",
+        "若需符合條件，應尋找其他 AI 工程師職缺"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/early-career-applied-ml-engineer-at-kognitos-4167331182?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=8%2F45QnWK9KsaYxT5C8IR9w%3D%3D",
+      "extracted_at": "2025-08-22T08:43:21.822349",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該職缺為早期職涯人才，且地點在美國San Jose，不符合5年以上經驗、台北/新北及上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性均不足。"
+    },
+    {
+      "title": "PHIZENIX hiring ML Engineer in Menlo Park, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-phizenix-4248633715?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=hzth0zVeHYgFvI1WqpKjWQ%3D%3D",
+      "extracted_at": "2025-08-22T08:43:32.125657",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該職缺位於美國 Menlo Park，且未符合地點（台北/新北）及公司類型（上市或外商）的條件；內容與任務目標高度不相關，資訊價值和完整性對本收集工作無實際幫助。"
+    },
+    {
+      "title": "Gauss Labs hiring AI Engineer - Machine Learning (US) in Palo Alto, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [
+        "職缺為AI工程師（機器學習）",
+        "雇主為Gauss Labs",
+        "位置在美國加州帕洛阿爾托"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.3,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-machine-learning-us-at-gauss-labs-4251982302?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=ggmA%2Frk%2F0me%2BTgFte9kDHQ%3D%3D",
+      "extracted_at": "2025-08-22T08:43:42.610507",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合台北/新北、上市公司或外商的條件，也不說明經驗要求為5年以上。內容與任務目標高度不相關，資訊價值和完整性均不足，時效性亦無實際幫助。"
+    },
+    {
+      "title": "Applied AI Engineer",
+      "date": "未知",
+      "key_points": [
+        "職缺位於台北與舊金山",
+        "公司為Warp，屬於外商或上市公司可能性高",
+        "職稱為Applied AI Engineer"
+      ],
+      "data_points": [
+        "申請人數超過200人",
+        "發布時間3個月前"
+      ],
+      "predictions": [
+        "此職缺符合5年以上經驗需求的AI工程師",
+        "未提供具體技能要求，但可推測需熟悉機器學習與深度學習框架"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-at-warp-4231372047?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=xuSyM0zkyLLh6dv4dMIp6Q%3D%3D",
+      "extracted_at": "2025-08-22T08:44:36.973179",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "title": "Gather Founding ML Engineer - AI",
+      "date": "未知",
+      "key_points": [
+        "職缺標題為Founding ML Engineer - AI",
+        "工作地點列示為San Francisco, CA但頁面摘要提及台北",
+        "公司為Gather，屬於創業團隊"
+      ],
+      "data_points": [
+        "未提供具體經驗要求或技能清單"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上經驗、台北/新北地點與上市公司或外商的條件",
+        "若需收集符合條件的職缺，應排除此項"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/founding-ml-engineer-ai-at-gather-4222108634?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ISf5a0ioFaUlOnEd2%2Fxgkg%3D%3D",
+      "extracted_at": "2025-08-22T08:46:15.973455",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。內容與任務目標高度不相關，資訊價值和完整性亦不足以協助收集所需職缺。"
+    },
+    {
+      "title": "Speechify hiring Applied AI Engineer & Researcher - San Francisco, USA",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國舊金山",
+        "工作內容涵蓋機器學習、自然語言處理與模型部署",
+        "需具備Python/ML框架經驗及研究背景"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-researcher-san-francisco-usa-at-speechify-4282362920?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ds83djJT9JVg0%2B2k9PN8Rg%3D%3D",
+      "extracted_at": "2025-08-22T08:47:03.469315",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣台北或新北的上市公司或外商；且經驗要求與5年以上不符。內容雖提供AI相關技能，但對收集符合地點、公司類型及經驗條件的職缺幾乎無實際價值，故評估為不具幫助性。"
+    },
+    {
+      "title": "AI Engineer職缺收集",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-treering-4252812482?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=R4YqGXgj6hCwKBjy1x9X5Q%3D%3D",
+      "extracted_at": "2025-08-22T08:47:14.472077",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "title": "AI Engineer at 6sense – LinkedIn Job Posting",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國加州舊金山，非台北或新北",
+        "公司為外商（6sense）但不符合5年以上經驗的條件說明",
+        "未提供具體技能需求與能力列表"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺不屬於目標範圍內的AI工程師職缺收集項目",
+        "若需台灣地區資料，須尋找其他來源"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.3,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-6sense-4197395220?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=5Qo%2B62d5urRQdcm7ICQ%2BbQ%3D%3D",
+      "extracted_at": "2025-08-22T08:48:57.472867",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。資訊對收集台灣AI工程師職缺幾乎無用，時效性亦不具備價值。"
+    },
+    {
+      "title": "Speechify hiring AI Engineer & Researcher, Inference - San Francisco, USA",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-researcher-inference-san-francisco-usa-at-speechify-4282361913?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=2GqgDfNoKFa41fJX7S4F6w%3D%3D",
+      "extracted_at": "2025-08-22T08:50:29.571220",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國舊金山，且未提及經驗年限與公司類型，與「台北/新北、上市或外商、5年以上」的條件不符。內容對收集符合條件的 AI 工程師職缺幾乎無實際價值，故評估為不具幫助性且分數較低。"
+    },
+    {
+      "title": "You.com hiring AI Engineer in San Francisco, CA",
+      "date": "未知",
+      "key_points": [
+        "公司：You.com (美國舊金山)",
+        "職位：AI Engineer",
+        "主要工作地點：台北（或舊金山，視招聘公告而定）",
+        "招聘方式：LinkedIn 申請"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺未明確列出5年以上經驗、上市公司或外商條件，無法確認符合收集標準。"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-you-com-4281683678?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=BIQYRkh7UfRmvhbaXHj1wA%3D%3D",
+      "extracted_at": "2025-08-22T08:50:41.900012",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺主要位於美國舊金山，雖有台北選項但未明確說明符合5年以上經驗、上市公司或外商條件，且資訊不完整。"
+    },
+    {
+      "title": "AI Engineer職缺收集 - 2025/08/22 摘要",
+      "date": "未知",
+      "key_points": [
+        "Searchability® AI Engineer 職缺位於美國加州舊金山",
+        "未符合台北或新北地點條件",
+        "不屬上市公司或外商台灣分部"
+      ],
+      "data_points": [
+        "基本年薪 $220,000 – $270,000",
+        "已收到超過 200 位申請者"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上經驗且在台灣的搜尋範圍",
+        "若需收集符合條件的職缺，須進一步搜尋台北/新北上市公司或外商"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-searchability%C2%AE-4289331410?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=84%2FyDiPJ41jfjlFd4JdcRA%3D%3D",
+      "extracted_at": "2025-08-22T08:50:54.131159",
+      "is_helpful": true,
+      "helpfulness_score": 0.65,
+      "helpfulness_reason": "該職缺符合地點（台北）且屬於 AI Engineer，提供了職責與技能需求，可作為收集資料的參考。雖然僅一則職缺且公司是否上市或外商未明確，但資訊仍具一定價值。"
+    },
+    {
+      "title": "Nava Benefits hiring AI Engineer in San Francisco, CA",
+      "date": "未知",
+      "key_points": [
+        "AI工程師職缺於Nava Benefits發布",
+        "主要負責機器學習模型開發與部署",
+        "工作內容涵蓋資料前處理、模型訓練、效能優化及跨團隊協作"
+      ],
+      "data_points": [
+        "公司提供競爭薪資、彈性工時與專業成長機會"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上經驗且地點在台北/新北的條件",
+        "若需收集符合條件的職缺，須搜尋其他來源或篩選標題關鍵字"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-nava-benefits-4260501667?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ArNfFBhQlGxsRB54N3Usqg%3D%3D",
+      "extracted_at": "2025-08-22T08:52:44.145678",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，與任務要求的台北或新北地點不符；且未明示經驗年限及是否為上市公司或外商。內容雖提到 AI 工程師相關技能，但對收集符合條件的職缺幫助有限。"
+    },
+    {
+      "title": "Instawork hiring ML Engineer in San Francisco, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [
+        "職缺：ML Engineer",
+        "公司：Instawork (San Francisco, CA)",
+        "主要職責：機器學習模型開發與部署、資料處理及特徵工程"
+      ],
+      "data_points": [
+        "ML Engineer",
+        "Instawork"
+      ],
+      "predictions": [
+        "AI 工程師需求將持續上升，台北/新北市場競爭激烈",
+        "上市公司或外商對5年以上經驗者的薪資與福利較具吸引力"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-at-instawork-4271043001?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=vDN0HlKtT6hqgyaJQyAisA%3D%3D",
+      "extracted_at": "2025-08-22T08:54:32.021304",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，且未提及經驗年限與台灣地點，與收集5年以上經驗、台北/新北上市或外商公司的 AI 工程師職缺目標不符。"
+    },
+    {
+      "title": "Pragmatike hiring AI/ML Engineer in San Francisco, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [
+        "AI/ML Engineer職缺於Pragmatike（San Francisco, CA）",
+        "需具備機器學習、深度學習與雲端部署經驗",
+        "重點在模型訓練、資料處理及實際應用"
+      ],
+      "data_points": [
+        "機器學習",
+        "深度學習",
+        "雲端部署",
+        "模型訓練",
+        "資料處理"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上台北/新北上市公司或外商條件",
+        "若需收集符合條件的職缺，須搜尋其他來源"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-pragmatike-4281303745?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=saPI2ezoc7EKGWIYc1HUiw%3D%3D",
+      "extracted_at": "2025-08-22T08:54:44.617414",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，且未符合台北或新北地點、上市公司/外商條件，也不說明經驗年限。內容與任務目標高度不相關，資訊價值有限，時效性亦無關鍵。"
+    },
+    {
+      "title": "DeepAware AI (YC S25) hiring AI/ML Engineer in Taipei",
+      "date": "未知",
+      "key_points": [
+        "AI/ML Engineer職缺於台北",
+        "公司為DeepAware AI，屬於Y Combinator S25創業公司",
+        "工作地點在台北市"
+      ],
+      "data_points": [
+        "需具備機器學習與人工智慧開發經驗",
+        "協助產品團隊實現深度學習模型"
+      ],
+      "predictions": [
+        "此職缺符合5年以上AI工程師需求",
+        "可能屬於上市或外商公司背景"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-deepaware-ai-yc-s25-4285716963?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=4LaELbwCSghP23cqboV4Fg%3D%3D",
+      "extracted_at": "2025-08-22T08:54:56.146903",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖在台北，但公司為 YC 創業公司，非上市或外商；且未明示需5年以上經驗，資訊不完全符合任務條件。"
+    },
+    {
+      "title": "AI / ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "公司：EPM Scientific",
+        "地點標示為台北但實際顯示美國舊金山縣，可能遠距或誤植",
+        "職缺類型：AI/ML工程師"
+      ],
+      "data_points": [
+        "發布時間：1週前",
+        "申請者數量：200+"
+      ],
+      "predictions": [
+        "此職缺若為台北本地工作則符合5年以上經驗需求",
+        "若為遠距，可能不限定地點"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-epm-scientific-4283185782?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=iGPPRK0LxWWlwftcwqoFkQ%3D%3D",
+      "extracted_at": "2025-08-22T08:55:07.610613",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺主要位於美國舊金山縣，並非台北或新北；且未明確說明經驗要求為5年以上，也無關聯上市公司或外商背景。資訊不符合任務目標的地點、經驗與公司類型條件，且缺乏完整的技能需求描述，故評估幫助程度較低。"
+    },
+    {
+      "title": "Stealth Startup hiring AI/ML Engineer (Founding Team - Equity) in New York City Metropolitan Area",
+      "date": "未知",
+      "key_points": [
+        "需要5年以上AI/ML工程師經驗",
+        "職位為創始團隊成員，提供股權獎勵",
+        "公司為未公開名稱的健康科技初創企業（Stealth Startup）"
+      ],
+      "data_points": [
+        "已收到超過200名申請者",
+        "發布於LinkedIn 5天前"
+      ],
+      "predictions": [
+        "此職缺不符合台北或新北地點條件",
+        "可能吸引高經驗且願意遠端工作的AI/ML工程師"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-founding-team-equity-at-stealth-startup-4287451724?refid=cFZnT%2FCH1C55BeypWw0Tkg%3D%3D&trackingid=uLXXlost93%2B%2BWWs4G5FK7g%3D%3D",
+      "extracted_at": "2025-08-22T08:55:52.554612",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "title": "Principle ML / AI Engineer",
+      "date": "未知",
+      "key_points": [
+        "職位為 Principle ML / AI Engineer",
+        "工作地點在 New York, NY",
+        "非台灣台北或新北"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/principle-ml-ai-engineer-at-atlassian-4278689267?refid=cFZnT%2FCH1C55BeypWw0Tkg%3D%3D&trackingid=WhCRnhe3ABhB%2BbUZIA%2BUMg%3D%3D",
+      "extracted_at": "2025-08-22T08:56:38.977260",
+      "is_helpful": true,
+      "helpfulness_score": 0.82,
+      "helpfulness_reason": "該職缺符合地點（台北）、公司類型（外商 Atlassian）且屬於 AI/ML Engineer，提供了職務描述與技能需求，可直接用於收集及統整所需技術。"
+    },
+    {
+      "title": "AI Engineer職缺收集結果",
+      "date": "未知",
+      "key_points": [
+        "頁面無法正常載入，未顯示任何職缺資訊",
+        "未提供職缺數量或具體內容"
+      ],
+      "data_points": [],
+      "predictions": [
+        "目前無法確認符合條件的職缺存在"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.glassdoor.com/Job/taiwan-ai-engineer-jobs-SRCH_IL.0,6_IC3278601_KO7,20.htm",
+      "extracted_at": "2025-08-22T08:30:44.391310",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該網頁無法正常載入，未提供任何職缺資訊、技能需求或其他可用數據，對於收集 AI 工程師職缺及其所需技術與能力的任務幾乎沒有實際價值。"
+    },
+    {
+      "title": "ML Engineer/Data Scientist",
+      "date": "未知",
+      "key_points": [
+        "台北招聘 ML Engineer / Data Scientist",
+        "主要負責機器學習模型開發與資料分析",
+        "需具備 Python、TensorFlow/PyTorch 等技能"
+      ],
+      "data_points": [
+        "公司：Adapty.io（美國）",
+        "工作地點：台北"
+      ],
+      "predictions": [
+        "此職缺符合5年以上經驗的 AI 工程師需求",
+        "可能屬於上市或外商企業背景"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ml-engineer-data-scientist-at-adapty-io-4195171893?pagenum=0&position=8&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=j%2FAv%2BEGxs8JlZY%2BVzMO7WQ%3D%3D",
+      "extracted_at": "2025-08-22T08:40:15.738882",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，並非台灣台北或新北地區；且未符合5年以上經驗、上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性亦不足以協助收集所需職缺。"
+    },
+    {
+      "title": "Paces hiring AI Engineer in Taipei",
+      "date": "未知",
+      "key_points": [
+        "公司：Paces (AI研發)",
+        "職位：AI工程師",
+        "地點：台北（雖顯示Brooklyn, NY）"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-paces-4287559514?pagenum=0&position=9&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=ZDD2C15s5t44tnFWsGmIfw%3D%3D",
+      "extracted_at": "2025-08-22T08:40:26.219348",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該網頁僅提供單一職缺資訊，且地點與任務目標不符（台北/新北），缺乏技能需求、公司類型等關鍵細節，無法滿足收集多個 AI 工程師職缺並統整所需技術的需求。"
+    },
+    {
+      "title": "AI/ML Engineer at Veracity Software Inc",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國新澤西州",
+        "主要負責機器學習模型開發與部署",
+        "需具備Python、TensorFlow/PyTorch經驗"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-veracity-software-inc-4270327807?pagenum=0&position=20&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=0Mgq%2F9NkL7llYf7B2AXXeA%3D%3D",
+      "extracted_at": "2025-08-22T08:40:37.428130",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國新澤西州，與任務目標中要求的台灣台北或新北地點不符；且未提及5年以上經驗、上市公司或外商條件，資訊對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "title": "Fundwell hiring AI/ML Engineer in New York, NY | LinkedIn",
+      "date": "未知",
+      "key_points": [
+        "AI/ML Engineer職缺於Fundwell（紐約）發布",
+        "主要負責機器學習模型開發與部署",
+        "要求具備Python、TensorFlow/PyTorch經驗，並熟悉資料處理及雲端服務"
+      ],
+      "data_points": [
+        "工作地點為美國NY",
+        "招聘平台LinkedIn可直接申請"
+      ],
+      "predictions": [
+        "此職缺不符合5年以上經驗且台北/新北地點的條件",
+        "未提及上市公司或外商身份"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-fundwell-4264909885?pagenum=0&position=43&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=Qc%2B1185AoCVau17jsgFpAg%3D%3D",
+      "extracted_at": "2025-08-22T08:40:46.289787",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國紐約，與任務目標要求的台北或新北地點不符；且未提及經驗年限、公司類型等關鍵條件，故對收集符合條件的 AI 工程師職缺幾乎無實際協助。"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - Software Engineer - Computer Vision/Deep Learning",
+      "date": "未知",
+      "key_points": [
+        "職缺為新畢業生計畫，非5年以上經驗需求",
+        "地點列示台北，但公司實際位於San Jose, CA",
+        "職稱標示AI工程師但針對電腦視覺與深度學習"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺不符合5年以上經驗、上市公司或外商的條件"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.3,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-computer-vision-deep-learning-at-weride-4052805822?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=XEdDAnQFdlQzUYsNEwVP0A%3D%3D",
+      "extracted_at": "2025-08-22T08:42:01.035618",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對2025年畢業的新鮮人，並非要求5年以上經驗的AI工程師；地點雖在台北，但不符合上市公司或外商條件。資訊內容與任務目標高度不符，且缺乏相關技能需求細節，故幫助程度極低。"
+    },
+    {
+      "title": "Brain Co. hiring AI/ML Engineer in Taipei",
+      "date": "未知",
+      "key_points": [
+        "職缺位於台北，雖公司總部在舊金山灣區",
+        "職位名稱為AI/ML Engineer",
+        "招聘資訊已於LinkedIn公布",
+        "候選人可直接透過LinkedIn連結申請"
+      ],
+      "data_points": [
+        "公司：Brain Co.",
+        "地點：台北"
+      ],
+      "predictions": [
+        "此職缺可能符合5年以上經驗的AI工程師需求",
+        "若符合上市或外商標準，將提升競爭力"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "中",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-brain-co-4275844846?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=w4BRNF0oyd2mkiW6DrhpCQ%3D%3D",
+      "extracted_at": "2025-08-22T08:42:11.768364",
+      "is_helpful": false,
+      "helpfulness_score": 0.25,
+      "helpfulness_reason": "該職缺雖提及 AI/ML Engineer 且公司總部在台北，但未明示經驗年限、是否為上市或外商，以及具體技能需求，且主要工作地點為舊金山灣區。資訊不完整且與 5 年以上經驗的台北／新北職缺條件不完全符合，時效性亦有限。"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - Software Engineer, Algorithm in Taipei",
+      "date": "未知",
+      "key_points": [
+        "職位為新畢業生，非5年以上經驗需求",
+        "工作地點包含台北與San Jose, CA",
+        "公司為WeRide AI",
+        "職責聚焦於演算法開發與AI技術應用"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺不符合收集條件（5年以上經驗、上市或外商）"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.4,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-algorithm-at-weride-4027932216?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=NoFNR9%2F5uAyhiaZi82fAfw%3D%3D",
+      "extracted_at": "2025-08-22T08:42:24.176613",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對新畢業生，經驗要求不符5年以上；地點雖有台北，但同時包含 San Jose，且未明確說明公司為上市或外商。內容與收集 AI 工程師、5年以上經驗、台北/新北上市公司或外商的職缺目標高度不相關，資訊價值有限，時效性亦無特別優勢，完整度不足以支援任務需求。"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - General Software Engineer in San Jose, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-general-software-engineer-at-weride-4139283155?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=5vErL0CFGQsOKkzQnjgamQ%3D%3D",
+      "extracted_at": "2025-08-22T08:42:36.299560",
+      "is_helpful": false,
+      "helpfulness_score": 0.35,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - Software Engineer - Computer Vision/Deep Learning",
+      "date": "未知",
+      "key_points": [
+        "職稱：Software Engineer – Computer Vision/Deep Learning",
+        "公司：WeRide（San Jose, CA）",
+        "地點：台北（招聘對象為台灣在校或即將畢業學生）"
+      ],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.3,
+      "time_relevance": "高",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-computer-vision-deep-learning-at-weride-4052805822?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=b8oMCpqewhbXnH3nn7QodQ%3D%3D",
+      "extracted_at": "2025-08-22T08:43:52.553499",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對2025年新畢業生，且主要在美國San Jose招聘，雖有台灣學生招募，但不符合\"5年以上經驗、台北或新北、上市公司/外商\"的條件；資訊與任務目標高度不相關，缺乏可用數據。"
+    },
+    {
+      "title": "Brain Co. AI/ML Engineer Posting",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國舊金山灣區，非台北或新北",
+        "未標明經驗年限，無法確認5年以上需求",
+        "公司為上市或外商資訊不明"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺不符合收集條件，需尋找其他符合地點與經驗的職缺"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-brain-co-4275844846?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=qbTBkt7r1wPKRL5Vxo7dQg%3D%3D",
+      "extracted_at": "2025-08-22T08:44:04.477750",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未提及5年以上經驗、上市公司或外商條件。內容與任務目標高度不符，資訊價值和完整性均不足，時效性亦無關鍵影響。"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - Software Engineer, Algorithm in San Jose, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-algorithm-at-weride-4027932216?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=soFzi4lS79pvgdDHTwp6eg%3D%3D",
+      "extracted_at": "2025-08-22T08:44:13.597962",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對即將畢業的新生，經驗要求不符（需5年以上），且地點包含台北但屬於新進職位，與收集上市公司或外商、5年以上AI工程師職缺的任務目標不直接相關。"
+    },
+    {
+      "title": "WeRide hiring New Grads 2025 - General Software Engineer in San Jose, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.2,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/new-grads-2025-general-software-engineer-at-weride-4139283155?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=ferv%2Bf5tReT%2Fs%2FYtpsRaMw%3D%3D",
+      "extracted_at": "2025-08-22T08:44:25.435051",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對新畢業生，且工作地點包含台北，但並未符合\"5年以上經驗、上市公司或外商\"的條件；內容與任務目標不直接相關。"
+    },
+    {
+      "title": "Inflection.io hiring AI engineer in San Francisco, CA | LinkedIn",
+      "date": "未知",
+      "key_points": [],
+      "data_points": [],
+      "predictions": [],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-engineer-at-inflection-io-4271083074?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=MFgR8NcQc2tfrHrqpiQ7cw%3D%3D",
+      "extracted_at": "2025-08-22T08:54:20.778318",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於舊金山，與台北/新北地點不符；且未明示 5 年以上經驗要求，也不是上市公司或外商。資訊對收集符合條件的 AI 工程師職缺幾乎無實際價值。"
+    },
+    {
+      "title": "Applied AI Engineer",
+      "date": "未知",
+      "key_points": [
+        "職缺：Applied AI Engineer（應用AI工程師）",
+        "公司Parcha總部位於美國舊金山，但職位於台北",
+        "此職缺在LinkedIn Jobs上發布，編號4072314615"
+      ],
+      "data_points": [
+        "職缺編號 4072314615",
+        "地點 台北"
+      ],
+      "predictions": [
+        "AI工程師需求持續高漲，尤其在外商公司中",
+        "此類職缺可能吸引擁有5年以上經驗的專業人才"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "高",
+      "source_credibility": "中",
+      "source_url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-at-parcha-4072314615?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=5Z%2BgIYmXENgl5AZ9%2BF7d6A%3D%3D",
+      "extracted_at": "2025-08-22T08:55:20.137175",
+      "is_helpful": false,
+      "helpfulness_score": 0.35,
+      "helpfulness_reason": "該職缺位於台北，但缺乏關鍵資訊（如經驗年限、是否為上市公司或外商）以及完整的技能需求，無法直接滿足任務目標所需的詳細篩選與統整需求。"
+    },
+    {
+      "title": "Cogent Security AI/ML Engineer",
+      "date": "未知",
+      "key_points": [
+        "職缺位於美國舊金山，非台北或新北",
+        "公司為 Cogent Security，未標示上市或外商"
+      ],
+      "data_points": [],
+      "predictions": [
+        "此職缺不符合收集條件"
+      ],
+      "sentiment": "neutral",
+      "confidence": 0.8,
+      "time_relevance": "低",
+      "source_credibility": "高",
+      "source_url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-cogent-security-4265553122?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=qgzOBCb9pVZWaWSmCw4bKg%3D%3D",
+      "extracted_at": "2025-08-22T08:55:32.932346",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣台北或新北的上市公司或外商；且經驗要求未明確顯示5年以上。內容與任務目標高度不符，資訊價值、時效性及完整性均不足以協助收集符合條件的職缺。"
+    }
+  ],
+  "page_summaries": [
+    {
+      "url": "https://www.linkedin.com/jobs/search/?keywords=AI%20Engineer&location=%E5%8F%B0%E7%81%A3%E5%8C%97%E5%9C%92%E5%8D%80&distance=25",
+      "title": "17,000+ AI Engineer jobs in United States",
+      "summary": "**AI工程師職缺收集概覽（美國）**\n\n| 指標 | 數值 |\n|------|------|\n| 總職缺數 | 超過17,000個 |\n| 時間範圍 | 任何時間、過去一年、月、週、24小時 |\n| 公司分布 | Netflix (29)、Nuro (15)、X (7)、Vectra AI (4)、Toyota Research Institute (3) 等 |\n| 工作類型 | 全職 15,798；兼職 235；合約 1,026；臨時 26；志願",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 0,
+      "found_via": "direct",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai-4267588494?pagenum=0&position=7&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=8nF%2BzANrIor73EXOARHg2g%3D%3D",
+      "title": "Vectra AI hiring AI/ML Engineer (Multiple roles and seniority levels) in San Jose, CA | LinkedIn",
+      "summary": "AI/ML 工程師（多職位、不同級別）於 Vectra AI 在台北招募，職缺涵蓋機器學習模型開發與安全分析。招聘公告連結：<https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai-4267588494>。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州聖荷西，與任務要求的台北/新北地點不符；且未提及經驗年限或公司類型，資訊對收集符合條件的 AI 工程師職缺幾乎無實質價值。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-snowrelic-inc-4283409264?pagenum=0&position=16&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=jQgZHvhQqzaV0f7UkNRoSA%3D%3D",
+      "title": "Snowrelic Inc hiring AI/ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 Snowrelic Inc（San Jose，CA）在 LinkedIn 上發布。招聘類別為 AI/ML Engineer，主要針對機器學習與人工智慧相關技術的開發與實作。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州聖荷西，與任務目標要求的台灣台北或新北地點不符；且未提及5年以上經驗、上市公司或外商條件，資訊對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-fay-4283973562?pagenum=0&position=17&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=05UOP%2BhdBh0Jknm%2BoeRFIw%3D%3D",
+      "title": "Fay hiring AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**AI工程師職缺（Fay）**  \n- 職位：AI Engineer  \n- 公司：Fay (Food & You)  \n- 位置：台北（或遠距）  \n- 招聘平台：LinkedIn  \n- 申請方式：點擊「Apply」或註冊/登入 LinkedIn。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖位於台北或遠距，但未明示需5年以上經驗，且公司是否上市或外商不確定。資訊僅提供基本職稱與位置，缺乏關鍵技能、公司背景及年資要求，對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-stackai-4252371940?pagenum=0&position=24&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=RWj3LzIP%2BckV1S5kcn14Ag%3D%3D",
+      "title": "StackAI hiring AI/ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI/ML Engineer 職缺於 StackAI（舊稱 San Francisco, CA）發布。職位為 AI/ML 工程師，主要負責機器學習模型開發與部署。應徵者須具備相關技術背景，可透過 LinkedIn 申請或註冊帳號查看詳細資訊。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並未符合台北或新北地點要求；且沒有明確說明5年以上經驗及上市公司/外商條件。內容與任務目標高度不相關，資訊價值有限，時效性亦無法滿足需求。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-or-data-scientist-at-veracity-software-inc-4260309062?pagenum=0&position=33&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=bzeuZY6BHyK8LexmqF%2FvjQ%3D%3D",
+      "title": "Veracity Software Inc hiring AI / ML Engineer OR Data Scientist in Iselin, NJ | LinkedIn",
+      "summary": "**AI / ML Engineer 或 Data Scientist 職缺概覽（Veracity Software Inc）**\n\n| 項目 | 詳細內容 |\n|------|----------|\n| **職位名稱** | AI / ML Engineer OR Data Scientist |\n| **公司與地點** | Veracity Software Inc，Iselin, NJ；遠程工作（加拿大/美國） |\n| **招聘類型** | 長期合約（Long Term Contract） |\n| **經驗要求** | 3年以上專業軟體／AI/ML 開發經驗；學士以上學位（計算機科學、工程",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.6,
+      "helpfulness_reason": "該職缺符合地點（台北）且屬於 AI/ML Engineer，雖未明示經驗年限，但仍可作為資料來源之一。資訊提供了職務內容與招聘平台，可協助後續整理技能需求。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-instawork-4271043001?pagenum=0&position=40&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=Ikoq577xTBqj6S6CajhAdQ%3D%3D",
+      "title": "Instawork hiring ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**摘要**  \nLinkedIn 刊登「ML Engineer」職缺，雇主為 Instawork（位於美國加州舊金山）。該職位屬於 AI/機器學習領域，招聘資訊可透過 LinkedIn 申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣地區；且未符合5年以上經驗、上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性均不足以協助收集所需職缺。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-landbase-4138518251?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=MuiLJ661p2M6LYXoevcc8g%3D%3D",
+      "title": "Landbase hiring ML Engineer in Mountain View, CA | LinkedIn",
+      "summary": "**摘要**  \nLinkedIn 上發布的「ML Engineer」職缺，隸屬於 Landbase（Mountain View, CA）。職位專注機器學習工程，需具備 AI 技術背景。招聘信息可透過 LinkedIn 申請或註冊帳號查看詳細要求與薪資範圍。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合地點、公司類型或經驗年限條件，對收集台灣台北/新北上市公司或外商的 AI 工程師職缺幾乎無實質協助。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-snowrelic-inc-4283409264?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=DW9SgAnOlrTEPPvDoUL%2BQg%3D%3D",
+      "title": "Snowrelic Inc hiring AI/ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 Snowrelic Inc（San Jose, CA）發布，距今約一週。招聘重點為 AI/ML 技術開發，適合具相關背景者申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。資訊對收集台灣AI工程師職缺幾乎無用，時效性亦有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/applied-ml-engineer-at-kognitos-4181101118?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=AM5FU8ZyI%2B8SznujYmJIlA%3D%3D",
+      "title": "Kognitos hiring Applied ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \n- 職缺：Applied ML Engineer（AI 工程師）  \n- 公司：Kognitos，總部位於美國加州聖荷西。  \n- 位置：台北（LinkedIn 列示）。  \n- 招聘平台：LinkedIn Jobs。  \n- 申請方式：需先註冊或登入 LinkedIn 再點擊「Apply」。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖標示為 AI 工程師，但位置顯示為美國加州聖荷西，且未明確說明需5年以上經驗或台北/新北地點。資訊與任務目標不符，缺乏關鍵條件及完整性，時效性亦無法確認。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/early-career-applied-ml-engineer-at-kognitos-4167331182?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=8bZoEMDyQIQO8ZTj9mZw2w%3D%3D",
+      "title": "Kognitos hiring Early-Career Applied ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \nKognitos 正在招聘「Early‑Career Applied ML Engineer」職位，工作地點為台北。此職缺針對具備機器學習基礎的新人，提供實務專案經驗與技術成長機會。申請者需於 LinkedIn 內完成註冊或登入後提交履歷。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺為 Early‑Career Applied ML Engineer，並非5年以上經驗的 AI 工程師；雖然地點在台北，但不符合上市公司或外商條件。內容對收集符合任務目標的職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-phizenix-4248633715?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=lIh1tdMF4vP0FiCgkIDKQA%3D%3D",
+      "title": "PHIZENIX hiring ML Engineer in Menlo Park, CA | LinkedIn",
+      "summary": "**ML工程師職缺（PHIZENIX）**  \n- **公司：** PHIZENIX，位於美國加州Menlo Park。  \n- **職位：** ML Engineer（機器學習工程師）。  \n- **發布時間：** 兩個月前。  \n- **申請方式：** LinkedIn 直接申請或註冊帳號。  \n- **備註：** 目前已開放申請，首25名",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，與台北/新北地點不符；未提及5年以上經驗要求，也未提供上市公司或外商背景資訊。內容與任務目標高度不相關，且缺乏可用的技能需求細節，故評估為不幫助且分數低。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-machine-learning-us-at-gauss-labs-4251982302?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=SoGjyJE2SC84eFNPRKhbSQ%3D%3D",
+      "title": "Gauss Labs hiring AI Engineer - Machine Learning (US) in Palo Alto, CA | LinkedIn",
+      "summary": "AI 工程師（機器學習，US）職缺於 Gauss Labs（Palo Alto, CA）。工作內容涵蓋模型開發、資料處理與部署；需具備 Python、TensorFlow/PyTorch 與雲端平台經驗。薪資範圍未列明，但符合美國 AI 工程師市場標準。職位於 LinkedIn 公布，申請須註冊或登入。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，且未符合台北/新北、上市公司或外商以及5年以上經驗的條件，資訊與任務目標高度不相關。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai-4267588494?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=m%2Bs%2FHANSqM0VEPYHM5CUvQ%3D%3D",
+      "title": "Vectra AI hiring AI/ML Engineer (Multiple roles and seniority levels) in San Jose, CA | LinkedIn",
+      "summary": "AI/ML 工程師（多層級）職缺於台北，隸屬於美國矽谷公司 Vectra AI。職位涵蓋初階至高階工程師，需具備機器學習、資料處理與模型部署經驗。招聘網址：LinkedIn 職缺頁面（https://www.linkedin.com/jobs/view/ai-ml-engineer-multiple-roles-and-seniority-levels-at-vectra-ai",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國矽谷，與任務要求的台北或新北地點不符；且未明示是否符合5年以上經驗及上市公司/外商條件。資訊雖提供職缺概述，但對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-landbase-4138518251?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=MaFQrKfQHyjvMpG5tPKQ%2BQ%3D%3D",
+      "title": "Landbase hiring ML Engineer in Mountain View, CA | LinkedIn",
+      "summary": "**摘要：**  \nLinkedIn 上發布的「ML Engineer」職缺，雇主為 Landbase（Mountain View, CA）。該職位屬於 AI/機器學習工程師類別，主要工作地點在美國加州。招聘信息可透過 LinkedIn 申請或註冊帳號查看詳細內容。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，與台北/新北地點不符；未提及5年以上經驗要求，也無上市公司或外商背景資訊。內容與任務目標高度不相關，且缺乏可用的技能需求細節，故評估為不幫助且分數低。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/applied-ml-engineer-at-kognitos-4181101118?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=%2BPszru4ZlA3vrHSfTXGJaQ%3D%3D",
+      "title": "Kognitos hiring Applied ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \n職缺：Applied ML Engineer（應用機器學習工程師）  \n公司：Kognitos，位於 San Jose, CA。  \n招聘平台：LinkedIn 職缺頁面 (https://www.linkedin.com/jobs/view/applied-ml-engineer-at-kognitos-4181101118)。  \n申請方式：點擊「Apply」或登入/註冊 LinkedIn 進行線上申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合\"台北或新北、上市公司/外商、5年以上經驗\"的條件，內容與收集AI工程師職缺的任務目標高度不相關。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/early-career-applied-ml-engineer-at-kognitos-4167331182?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=8%2F45QnWK9KsaYxT5C8IR9w%3D%3D",
+      "title": "Kognitos hiring Early-Career Applied ML Engineer in San Jose, CA | LinkedIn",
+      "summary": "**簡潔摘要（≤100字）**  \nKognitos於台北招聘「Early‑Career Applied ML Engineer」職缺，屬AI工程師類別。工作地點為台北，職位面向早期職涯人才，重點在機器學習應用開發。申請須透過LinkedIn完成。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該職缺為早期職涯人才，且地點在美國San Jose，不符合5年以上經驗、台北/新北及上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性均不足。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-phizenix-4248633715?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=hzth0zVeHYgFvI1WqpKjWQ%3D%3D",
+      "title": "PHIZENIX hiring ML Engineer in Menlo Park, CA | LinkedIn",
+      "summary": "ML 工程師職缺於 PHIZENIX（Menlo Park, CA）發布，已經兩個月前上架。可透過 LinkedIn 申請，並查看此職位的招聘進度與已錄用人員資訊。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該職缺位於美國 Menlo Park，且未符合地點（台北/新北）及公司類型（上市或外商）的條件；內容與任務目標高度不相關，資訊價值和完整性對本收集工作無實際幫助。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-machine-learning-us-at-gauss-labs-4251982302?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=ggmA%2Frk%2F0me%2BTgFte9kDHQ%3D%3D",
+      "title": "Gauss Labs hiring AI Engineer - Machine Learning (US) in Palo Alto, CA | LinkedIn",
+      "summary": "AI工程師（機器學習）職缺，雇主為Gauss Labs，位於美國加州帕洛阿爾托。招聘信息發布於LinkedIn，需申請或登入查看詳細內容。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國加州，且未符合台北/新北、上市公司或外商的條件，也不說明經驗要求為5年以上。內容與任務目標高度不相關，資訊價值和完整性均不足，時效性亦無實際幫助。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-at-warp-4231372047?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=xuSyM0zkyLLh6dv4dMIp6Q%3D%3D",
+      "title": "Warp hiring Applied AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**Applied AI Engineer – Warp (台北/舊金山)**  \n> **職缺概覽（約 250 字）**\n\n| 項目 | 內容 |\n|------|------|\n| **公司** | Warp（位於舊金山，亦有台北分部） |\n| **職稱** | Applied AI Engineer |\n| **發布時間** | 3 個月前 |\n| **申請人數** | 超過 200 人 |\n| **招聘渠道** | LinkedIn 內部申請",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/founding-ml-engineer-ai-at-gather-4222108634?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ISf5a0ioFaUlOnEd2%2Fxgkg%3D%3D",
+      "title": "Gather hiring Founding ML Engineer - AI in San Francisco, CA | LinkedIn",
+      "summary": "**摘要**  \nGather（台北）招聘「Founding ML Engineer - AI」職缺，工作地點為舊金山。此職位屬於創始團隊成員，主要負責機器學習與人工智慧相關開發。應徵者需具備ML工程經驗；公司提供創業環境與技術領先機會。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。內容與任務目標高度不相關，資訊價值和完整性亦不足以協助收集所需職缺。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-researcher-san-francisco-usa-at-speechify-4282362920?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ds83djJT9JVg0%2B2k9PN8Rg%3D%3D",
+      "title": "Speechify hiring Applied AI Engineer & Researcher - San Francisco, USA in San Francisco, CA | LinkedIn",
+      "summary": "**摘要**  \nSpeechify於美國舊金山招聘「Applied AI Engineer & Researcher」職缺。工作內容涵蓋機器學習、自然語言處理與模型部署，需具備Python/ML框架經驗及研究背景。薪資未公開，但位置為全職遠距或辦公室。適合AI工程師尋求創新產品開發機會。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣台北或新北的上市公司或外商；且經驗要求與5年以上不符。內容雖提供AI相關技能，但對收集符合地點、公司類型及經驗條件的職缺幾乎無實際價值，故評估為不具幫助性。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-treering-4252812482?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=R4YqGXgj6hCwKBjy1x9X5Q%3D%3D",
+      "title": "Treering hiring AI Engineer in San Mateo, CA | LinkedIn",
+      "summary": "**AI 工程師職缺（Treering，San Mateo, CA）— 2025‑08**\n\n| 項目 | 內容 |\n|------|------|\n| **公司** | Treering（專注於 AI 驅動的產品與服務） |\n| **職位** | AI Engineer |\n| **發布時間** | 約兩個月前（截至 2025‑08） |\n| **申請人數** | 超過 200 位候選人 |\n| **招聘渠道** | Linked",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-6sense-4197395220?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=5Qo%2B62d5urRQdcm7ICQ%2BbQ%3D%3D",
+      "title": "6sense hiring AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI 工程師職缺於 6sense（舊稱 6sense）在美國加州舊金山發布，透過 LinkedIn 招募。職位為 AI Engineer，招聘資訊包含公司標誌、申請連結與登入/註冊選項。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未符合5年以上經驗、上市公司或外商條件。資訊對收集台灣AI工程師職缺幾乎無用，時效性亦不具備價值。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-researcher-inference-san-francisco-usa-at-speechify-4282361913?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=2GqgDfNoKFa41fJX7S4F6w%3D%3D",
+      "title": "Speechify hiring AI Engineer & Researcher, Inference - San Francisco, USA in San Francisco, CA | LinkedIn",
+      "summary": "**AI工程師（推論）—Speechify，舊金山**  \n- 職位：AI Engineer & Researcher (Inference)  \n- 公司：Speechify（語音閱讀軟體）  \n- 地點：美國加州舊金山  \n- 主要工作：開發與優化機器學習推論模型，提升語音合成效能。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國舊金山，且未提及經驗年限與公司類型，與「台北/新北、上市或外商、5年以上」的條件不符。內容對收集符合條件的 AI 工程師職缺幾乎無實際價值，故評估為不具幫助性且分數較低。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-you-com-4281683678?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=BIQYRkh7UfRmvhbaXHj1wA%3D%3D",
+      "title": "You.com hiring AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI 工程師職缺（You.com）  \n- 公司：You.com (美國舊金山)  \n- 職位：AI Engineer  \n- 主要工作地點：台北（或舊金山，視招聘公告而定）  \n- 招聘方式：LinkedIn 申請，需先註冊/登入。  \n- 其他資訊：職缺簡介未列出具體技能與薪資。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺主要位於美國舊金山，雖有台北選項但未明確說明符合5年以上經驗、上市公司或外商條件，且資訊不完整。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-searchability%C2%AE-4289331410?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=84%2FyDiPJ41jfjlFd4JdcRA%3D%3D",
+      "title": "Searchability® hiring AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**AI 工程師職缺收集 - 2025/08/22 摘要**\n\n| 項目 | 詳細說明 |\n|------|----------|\n| **公司名稱** | Searchability®（美國加州舊金山） |\n| **職位** | AI Engineer |\n| **發布時間** | 6 小時前，已收到超過 200 位申請者 |\n| **薪資範圍** | 基本年薪 $220,000 – $270,000（實際薪酬視技能與經驗",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.65,
+      "helpfulness_reason": "該職缺符合地點（台北）且屬於 AI Engineer，提供了職責與技能需求，可作為收集資料的參考。雖然僅一則職缺且公司是否上市或外商未明確，但資訊仍具一定價值。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-nava-benefits-4260501667?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=ArNfFBhQlGxsRB54N3Usqg%3D%3D",
+      "title": "Nava Benefits hiring AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI 工程師職缺於 Nava Benefits（位於台北/舊金山）發布，主要負責機器學習模型開發與部署。工作內容涵蓋資料前處理、模型訓練、效能優化及跨團隊協作。公司提供競爭薪資、彈性工時與專業成長機會。招聘網址為 LinkedIn。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，與任務要求的台北或新北地點不符；且未明示經驗年限及是否為上市公司或外商。內容雖提到 AI 工程師相關技能，但對收集符合條件的職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-at-instawork-4271043001?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=vDN0HlKtT6hqgyaJQyAisA%3D%3D",
+      "title": "Instawork hiring ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**簡潔摘要（≤100字）**  \n- 職缺：ML Engineer  \n- 公司：Instawork (San Francisco, CA)  \n- 主要職責：機器學習模型開發與部署，資料處理、特徵工程及演算法優化。  \n- 招聘地點：台北（或 San Francisco）  \n- 聯絡方式：LinkedIn 申請或登入查看詳情。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，且未提及經驗年限與台灣地點，與收集5年以上經驗、台北/新北上市或外商公司的 AI 工程師職缺目標不符。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-pragmatike-4281303745?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=saPI2ezoc7EKGWIYc1HUiw%3D%3D",
+      "title": "Pragmatike hiring AI/ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 Pragmatike（San Francisco, CA），需具備機器學習、深度學習與雲端部署經驗，重點在模型訓練、資料處理及實際應用。招聘簡訊已公開於 LinkedIn，適合具相關技術背景者申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，且未符合台北或新北地點、上市公司/外商條件，也不說明經驗年限。內容與任務目標高度不相關，資訊價值有限，時效性亦無關鍵。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-deepaware-ai-yc-s25-4285716963?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=4LaELbwCSghP23cqboV4Fg%3D%3D",
+      "title": "DeepAware AI (YC S25) hiring AI/ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 DeepAware AI（YC S25）招聘，工作地點為台北。職位要求具備機器學習與人工智慧開發經驗，並能協助產品團隊實現深度學習模型。公司總部位於舊金山，屬於 Y Combinator S25 期創業公司。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該職缺雖在台北，但公司為 YC 創業公司，非上市或外商；且未明示需5年以上經驗，資訊不完全符合任務條件。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-epm-scientific-4283185782?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=iGPPRK0LxWWlwftcwqoFkQ%3D%3D",
+      "title": "EPM Scientific hiring AI / ML Engineer in San Francisco County, CA | LinkedIn",
+      "summary": "**AI / ML 工程師職缺（EPM Scientific）**\n\n- **公司**：EPM Scientific  \n- **地點**：台北（實際位置顯示為美國舊金山縣，可能為遠距或誤植）  \n- **平台**：LinkedIn 招聘頁面 (https://www.linkedin.com/jobs/view/ai-ml-engineer-at-epm-scientific-428318578",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺主要位於美國舊金山縣，並非台北或新北；且未明確說明經驗要求為5年以上，也無關聯上市公司或外商背景。資訊不符合任務目標的地點、經驗與公司類型條件，且缺乏完整的技能需求描述，故評估幫助程度較低。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-founding-team-equity-at-stealth-startup-4287451724?refid=cFZnT%2FCH1C55BeypWw0Tkg%3D%3D&trackingid=uLXXlost93%2B%2BWWs4G5FK7g%3D%3D",
+      "title": "Stealth Startup hiring AI/ML Engineer (Founding Team - Equity) in New York City Metropolitan Area | LinkedIn",
+      "summary": "**AI/ML Engineer (Founding Team – Equity) – Stealth HealthTech Startup**\n\n| 內容 | 詳細說明 |\n|------|----------|\n| **職位** | AI/ML 工程師（創始團隊，股權獎勵） |\n| **公司** | 未公開名稱的健康科技初創企業（Stealth Startup） |\n| **地點** | 主要在紐約市大都市區，可遠端或混合辦公 |\n| **招聘狀態** | 5 天前發布，已收到超過 200 位申請者 |\n| **薪酬結",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.7,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/principle-ml-ai-engineer-at-atlassian-4278689267?refid=cFZnT%2FCH1C55BeypWw0Tkg%3D%3D&trackingid=WhCRnhe3ABhB%2BbUZIA%2BUMg%3D%3D",
+      "title": "Atlassian hiring Principle ML / AI Engineer in New York, NY | LinkedIn",
+      "summary": "**簡潔摘要（約230字）**\n\n這則 LinkedIn 招聘訊息來自 Atlassian，職位為「Principle ML / AI Engineer」，工作地點在美國紐約。發布於兩週前，目前已有 92 位申請者。雖未列出具體職責，但從標題可推知該職位屬高階機器學習/人工智慧工程師，負責領導 AI 專案、設計模型架構並與產品團隊協作。招聘頁面提供直接申請鏈結",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.7,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": true,
+      "helpfulness_score": 0.82,
+      "helpfulness_reason": "該職缺符合地點（台北）、公司類型（外商 Atlassian）且屬於 AI/ML Engineer，提供了職務描述與技能需求，可直接用於收集及統整所需技術。"
+    },
+    {
+      "url": "https://www.glassdoor.com/Job/taiwan-ai-engineer-jobs-SRCH_IL.0,6_IC3278601_KO7,20.htm",
+      "title": "0 ai engineer j Jobs in , August 2025 | Glassdoor",
+      "summary": "摘要：此頁面為台灣「AI 工程師」職缺搜尋結果，但目前無法正常載入，顯示錯誤訊息。未提供任何職缺數量或具體資訊。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 0,
+      "found_via": "direct",
+      "is_helpful": false,
+      "helpfulness_score": 0.05,
+      "helpfulness_reason": "該網頁無法正常載入，未提供任何職缺資訊、技能需求或其他可用數據，對於收集 AI 工程師職缺及其所需技術與能力的任務幾乎沒有實際價值。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ml-engineer-data-scientist-at-adapty-io-4195171893?pagenum=0&position=8&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=j%2FAv%2BEGxs8JlZY%2BVzMO7WQ%3D%3D",
+      "title": "Adapty.io hiring ML Engineer/Data Scientist in United States | LinkedIn",
+      "summary": "**摘要**  \n台北招聘 ML Engineer / Data Scientist，主要負責機器學習模型開發與資料分析。工作地點位於美國公司 Adapty.io，職缺屬技術類，需具備 Python、TensorFlow/PyTorch 等技能。申請方式可直接在 LinkedIn 內提交簡歷。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國，並非台灣台北或新北地區；且未符合5年以上經驗、上市公司或外商的條件。內容與任務目標高度不相關，資訊價值和完整性亦不足以協助收集所需職缺。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-paces-4287559514?pagenum=0&position=9&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=ZDD2C15s5t44tnFWsGmIfw%3D%3D",
+      "title": "Paces hiring AI Engineer in Brooklyn, NY | LinkedIn",
+      "summary": "**AI工程師職缺（Paces）**  \n- **公司**：Paces (AI 研發)  \n- **職位**：AI 工程師  \n- **地點**：台北（雖在 LinkedIn 顯示 Brooklyn, NY，實際招聘於台北）  \n- **申請方式**：LinkedIn 直接「Apply」或註冊/登入後提交。  \n\n(字數約 70 字",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.2,
+      "helpfulness_reason": "該網頁僅提供單一職缺資訊，且地點與任務目標不符（台北/新北），缺乏技能需求、公司類型等關鍵細節，無法滿足收集多個 AI 工程師職缺並統整所需技術的需求。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-veracity-software-inc-4270327807?pagenum=0&position=20&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=0Mgq%2F9NkL7llYf7B2AXXeA%3D%3D",
+      "title": "Veracity Software Inc hiring AI/ML Engineer in New Jersey, United States | LinkedIn",
+      "summary": "AI/ML Engineer 職缺於 Veracity Software Inc（新澤西州），主要負責機器學習模型開發與部署，需具備 Python、TensorFlow/PyTorch 經驗；工作地點為美國。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.15,
+      "helpfulness_reason": "該職缺位於美國新澤西州，與任務目標中要求的台灣台北或新北地點不符；且未提及5年以上經驗、上市公司或外商條件，資訊對收集符合條件的 AI 工程師職缺幫助有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-fundwell-4264909885?pagenum=0&position=43&refid=qE7onh1dCahjeCxL4Dfwow%3D%3D&trackingid=Qc%2B1185AoCVau17jsgFpAg%3D%3D",
+      "title": "Fundwell hiring AI/ML Engineer in New York, NY | LinkedIn",
+      "summary": "AI/ML Engineer職缺於Fundwell（紐約）發布，主要負責機器學習模型開發與部署。要求具備Python、TensorFlow/PyTorch經驗，並熟悉資料處理及雲端服務。工作地點為美國NY，招聘平台LinkedIn可直接申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 1,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國紐約，與任務目標要求的台北或新北地點不符；且未提及經驗年限、公司類型等關鍵條件，故對收集符合條件的 AI 工程師職缺幾乎無實際協助。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-computer-vision-deep-learning-at-weride-4052805822?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=XEdDAnQFdlQzUYsNEwVP0A%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - Software Engineer - Computer Vision/Deep Learning in San Jose, CA | LinkedIn",
+      "summary": "**新畢業生2025計畫—軟體工程師（電腦視覺/深度學習）**  \n- 公司：WeRide，位於台北  \n- 職缺：AI 工程師，專注於電腦視覺與深度學習技術  \n- 目標人群：2025 年畢業新鮮人  \n- 申請方式：LinkedIn 直接申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對2025年畢業的新鮮人，並非要求5年以上經驗的AI工程師；地點雖在台北，但不符合上市公司或外商條件。資訊內容與任務目標高度不符，且缺乏相關技能需求細節，故幫助程度極低。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-brain-co-4275844846?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=w4BRNF0oyd2mkiW6DrhpCQ%3D%3D",
+      "title": "Brain Co. hiring AI/ML Engineer in San Francisco Bay Area | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 Brain Co.（位於台北／公司總部在舊金山灣區）公開招聘。職位需求 AI/ML 技術專長，申請可直接透過 LinkedIn 連結（https://www.linkedin.com/jobs/view/ai-ml-engineer-at-brain-co-4275844846）。招聘資訊已於 LinkedIn 公布，候選人需註",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.25,
+      "helpfulness_reason": "該職缺雖提及 AI/ML Engineer 且公司總部在台北，但未明示經驗年限、是否為上市或外商，以及具體技能需求，且主要工作地點為舊金山灣區。資訊不完整且與 5 年以上經驗的台北／新北職缺條件不完全符合，時效性亦有限。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-algorithm-at-weride-4027932216?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=NoFNR9%2F5uAyhiaZi82fAfw%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - Software Engineer, Algorithm in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \nWeRide 正在招聘「New Grads 2025 - Software Engineer, Algorithm」職位，主要面向剛畢業學生。工作地點為台北（亦有 San Jose、CA 的資訊），職責聚焦於演算法開發與 AI 技術應用。申請者需透過 LinkedIn 進行加入或登入後提交履歷。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對新畢業生，經驗要求不符5年以上；地點雖有台北，但同時包含 San Jose，且未明確說明公司為上市或外商。內容與收集 AI 工程師、5年以上經驗、台北/新北上市公司或外商的職缺目標高度不相關，資訊價值有限，時效性亦無特別優勢，完整度不足以支援任務需求。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-general-software-engineer-at-weride-4139283155?refid=PzmSojhPErH3ntgLhzyzmg%3D%3D&trackingid=5vErL0CFGQsOKkzQnjgamQ%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - General Software Engineer in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \n- 職缺：New Grads 2025 - General Software Engineer（AI工程師職位）  \n- 公司：WeRide (San Jose, CA)  \n- 工作地點：台北  \n- 招聘平台：LinkedIn  \n- 目標對象：即將畢業或剛畢業的學生，適合入門級 AI/軟體開發職涯。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.35,
+      "helpfulness_reason": "LLM評估解析失敗，使用相關度作為參考"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-computer-vision-deep-learning-at-weride-4052805822?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=b8oMCpqewhbXnH3nn7QodQ%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - Software Engineer - Computer Vision/Deep Learning in San Jose, CA | LinkedIn",
+      "summary": "**AI工程師職缺摘要（新畢業生2025）**\n\n- **職稱**：Software Engineer – Computer Vision/Deep Learning  \n- **公司**：WeRide（San Jose, CA）  \n- **地點**：台北（招聘對象為台灣在校或即將畢業學生）  \n- **目標人群**：2025年新畢業生，具備機器視覺、深度學習背景。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對2025年新畢業生，且主要在美國San Jose招聘，雖有台灣學生招募，但不符合\"5年以上經驗、台北或新北、上市公司/外商\"的條件；資訊與任務目標高度不相關，缺乏可用數據。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-brain-co-4275844846?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=qbTBkt7r1wPKRL5Vxo7dQg%3D%3D",
+      "title": "Brain Co. hiring AI/ML Engineer in San Francisco Bay Area | LinkedIn",
+      "summary": "AI/ML Engineer職缺於Brain Co.（San Francisco Bay Area）發布，主要負責人工智慧與機器學習相關開發。招聘資訊可透過LinkedIn申請，需註冊或登入帳號。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台北或新北；且未提及5年以上經驗、上市公司或外商條件。內容與任務目標高度不符，資訊價值和完整性均不足，時效性亦無關鍵影響。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-software-engineer-algorithm-at-weride-4027932216?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=soFzi4lS79pvgdDHTwp6eg%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - Software Engineer, Algorithm in San Jose, CA | LinkedIn",
+      "summary": "**摘要**  \nWeRide 正在招聘「New Grads 2025 – Software Engineer, Algorithm」職缺，主要面向即將畢業的新人。工作地點為台北（或 San Jose, CA），職位屬於軟體工程師／算法領域，適合具備 AI/機器學習背景的應徵者。招聘資訊可透過 LinkedIn 申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對即將畢業的新生，經驗要求不符（需5年以上），且地點包含台北但屬於新進職位，與收集上市公司或外商、5年以上AI工程師職缺的任務目標不直接相關。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/new-grads-2025-general-software-engineer-at-weride-4139283155?refid=ddEdFqbnzCGgsEnr%2BEh6ww%3D%3D&trackingid=ferv%2Bf5tReT%2Fs%2FYtpsRaMw%3D%3D",
+      "title": "WeRide hiring New Grads 2025 - General Software Engineer in San Jose, CA | LinkedIn",
+      "summary": "**摘要：**  \nWeRide 正在招募「New Grads 2025 – General Software Engineer」職位，目標於 2025 年新畢業生。工作地點為台北（或 San Jose, CA），屬 AI/軟體開發領域，請即刻申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺針對新畢業生，且工作地點包含台北，但並未符合\"5年以上經驗、上市公司或外商\"的條件；內容與任務目標不直接相關。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-engineer-at-inflection-io-4271083074?refid=A83Ueh7ojvYoATCCstqXlA%3D%3D&trackingid=MFgR8NcQc2tfrHrqpiQ7cw%3D%3D",
+      "title": "Inflection.io hiring AI engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI 工程師職缺於 Inflection.io（位於舊金山，CA）在 LinkedIn 上發布。招聘內容未列明具體技術要求或薪資，但標題為「AI engineer」，可透過 LinkedIn 申請。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於舊金山，與台北/新北地點不符；且未明示 5 年以上經驗要求，也不是上市公司或外商。資訊對收集符合條件的 AI 工程師職缺幾乎無實際價值。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/applied-ai-engineer-at-parcha-4072314615?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=5Z%2BgIYmXENgl5AZ9%2BF7d6A%3D%3D",
+      "title": "Parcha hiring Applied AI Engineer in San Francisco, CA | LinkedIn",
+      "summary": "**摘要**：  \n- 職缺：Applied AI Engineer（應用AI工程師）  \n- 公司：Parcha，總部位於美國舊金山，但職位於台北。  \n- 主要資訊：LinkedIn 招聘頁面提供申請連結與公司簡介。  \n- 相關數據：職缺編號 4072314615，發布於 LinkedIn Jobs。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.35,
+      "helpfulness_reason": "該職缺位於台北，但缺乏關鍵資訊（如經驗年限、是否為上市公司或外商）以及完整的技能需求，無法直接滿足任務目標所需的詳細篩選與統整需求。"
+    },
+    {
+      "url": "https://www.linkedin.com/jobs/view/ai-ml-engineer-at-cogent-security-4265553122?refid=p2DYdT3tJ5Ua9XOdB1vbkw%3D%3D&trackingid=qgzOBCb9pVZWaWSmCw4bKg%3D%3D",
+      "title": "Cogent Security hiring AI/ML Engineer in San Francisco, CA | LinkedIn",
+      "summary": "AI/ML 工程師職缺於 Cogent Security（舊金山，CA）發布。招聘連結：LinkedIn 職位編號 4265553122。",
+      "publish_date": null,
+      "time_score": 0.1,
+      "relevance_score": 0.35,
+      "depth": 2,
+      "found_via": "subpage",
+      "is_helpful": false,
+      "helpfulness_score": 0.1,
+      "helpfulness_reason": "該職缺位於美國舊金山，並非台灣台北或新北的上市公司或外商；且經驗要求未明確顯示5年以上。內容與任務目標高度不符，資訊價值、時效性及完整性均不足以協助收集符合條件的職缺。"
+    }
+  ],
+  "summary": "",
+  "confidence_score": 0.5824666666666668,
+  "execution_time": 2131.193091,
+  "start_time": "2025-08-22T08:30:28.496062",
+  "end_time": "2025-08-22T09:05:59.689153",
+  "status": "completed",
+  "error_messages": [],
+  "search_stats": {
+    "total_pages": 50,
+    "avg_relevance_score": 0.5880000000000002,
+    "avg_time_score": 0.09999999999999996,
+    "depth_distribution": {
+      "0": 2,
+      "1": 10,
+      "2": 38
+    },
+    "found_via_distribution": {
+      "direct": 2,
+      "subpage": 48
+    },
+    "domain_distribution": {
+      "www.linkedin.com": 49,
+      "www.glassdoor.com": 1
+    },
+    "date_range": {
+      "earliest": null,
+      "latest": null,
+      "with_dates": 0
+    }
+  },
+  "helpfulness_stats": {
+    "total_pages": 50,
+    "helpful_pages": 7,
+    "helpfulness_ratio": 0.14,
+    "avg_helpfulness_score": 0.20939999999999992
+  }
+}

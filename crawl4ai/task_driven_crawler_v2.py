@@ -1454,35 +1454,6 @@ class TaskDrivenCrawler:
             result.error_messages.append(str(e))
             logger.error(f"任務執行失敗: {e}")
             raise
-            logger.info("=== 階段三：語意抽取 ===")
-            if objective.output_format == "structured":
-                extracted_data = await self._extract_structured_data_from_pages(all_pages, objective)
-                result.extracted_data = extracted_data
-            else:
-                summary = await self._generate_summary_from_pages(all_pages, objective)
-                result.summary = summary
-            
-            # 計算信心度（考慮時間和深度）
-            result.confidence_score = self._calculate_enhanced_confidence(all_pages, objective)
-            
-            # 統計信息
-            result.search_stats = self._generate_search_stats(all_pages)
-            
-            result.status = "completed"
-            result.end_time = datetime.now()
-            result.execution_time = (result.end_time - result.start_time).total_seconds()
-            
-            # 保存結果
-            await self._save_results(result, output_dir)
-            
-            logger.info(f"任務完成！爬取 {result.crawled_pages} 個頁面，信心度: {result.confidence_score:.2%}")
-            return result
-            
-        except Exception as e:
-            result.status = "failed"
-            result.error_messages.append(str(e))
-            logger.error(f"任務執行失敗: {e}")
-            raise
     
     async def _smart_crawl_phase(self, urls: List[str], objective: TaskObjective) -> List[PageInfo]:
         """執行智慧爬取階段"""
@@ -2036,9 +2007,13 @@ URL: {page.url}
         return False
     
     async def _llm_recommend_websites(self, task_title: str, keywords: List[str], max_sites: int = 5, content_gaps: str = "", current_confidence: float = 0.0) -> List[str]:
-        """請LLM推薦相關網站"""
+        """請LLM推薦相關網站 - 增強台灣本地化"""
         try:
-            prompt = f"""針對任務「{task_title}」，請推薦 {max_sites} 個最權威且相關的網站URL。
+            # 檢測任務是否與台灣/中文相關
+            taiwan_related = any(keyword in task_title.lower() + ' '.join(keywords).lower() 
+                               for keyword in ['台灣', '臺灣', '中文', '繁體', '中華民國', '新台幣', 'taiwan', 'tw'])
+            
+            base_prompt = f"""針對任務「{task_title}」，請推薦 {max_sites} 個最權威且相關的網站URL。
 
 關鍵字: {', '.join(keywords)}
 當前信心度: {current_confidence:.1%}
@@ -2049,13 +2024,33 @@ URL: {page.url}
 2. 權威新聞媒體
 3. 專業分析機構
 4. 學術或研究機構
-5. 產業專家部落格
+5. 產業專家部落格"""
+
+            # 根據是否與台灣相關調整prompt
+            if taiwan_related:
+                specific_prompt = f"""{base_prompt}
+
+**特別要求（台灣相關任務）：**
+- 優先推薦台灣本地網站（.tw 域名）
+- 包含台灣政府機構、在地媒體、本土企業網站
+- 推薦順序：台灣官方網站 > 台灣媒體 > 台灣學術機構 > 國際權威網站
+- 建議包含：政府網站(.gov.tw)、新聞媒體(.com.tw)、教育機構(.edu.tw)
+
+要求：
+- 只返回URL列表，每行一個
+- 至少 {max(2, max_sites//2)} 個台灣本地網站
+- 確保網站的權威性和可信度
+- 優先選擇繁體中文內容"""
+            else:
+                specific_prompt = f"""{base_prompt}
 
 要求：
 - 只返回URL列表，每行一個
 - 優先選擇可能包含最新和詳細資訊的網站
 - 確保網站的權威性和可信度
-"""
+- 考慮地理相關性和語言適配性"""
+
+            prompt = specific_prompt
 
             async with httpx.AsyncClient() as client:
                 payload = {
@@ -2459,8 +2454,478 @@ URL列表："""
                 depth_counts[depth] += 1
         return depth_counts
 
+    async def generate_consolidated_report(self, jsonl_file: str, output_file: Optional[str] = None) -> str:
+        """從JSONL檔案生成統整報表"""
+        try:
+            if not os.path.exists(jsonl_file):
+                raise FileNotFoundError(f"JSONL檔案不存在: {jsonl_file}")
+            
+            # 讀取JSONL資料
+            crawl_data = []
+            with open(jsonl_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        data = json.loads(line.strip())
+                        crawl_data.append(data)
+                    except json.JSONDecodeError:
+                        continue
+            
+            if not crawl_data:
+                logger.warning("JSONL檔案中沒有有效資料")
+                return ""
+            
+            # 生成報表內容
+            report = await self._create_markdown_report(crawl_data)
+            
+            # 儲存報表
+            if output_file is None:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_file = f"crawl_report_{timestamp}.md"
+            
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(report)
+            
+            logger.info(f"統整報表已生成: {output_file}")
+            return output_file
+            
+        except Exception as e:
+            logger.error(f"生成統整報表失敗: {e}")
+            return ""
+    
+    async def _create_markdown_report(self, crawl_data: List[Dict]) -> str:
+        """創建Markdown格式的統整報表"""
+        # 分析資料
+        total_pages = len(crawl_data)
+        helpful_pages = [item for item in crawl_data if item.get('is_helpful', False)]
+        avg_confidence = sum(item.get('relevance_score', 0) for item in crawl_data) / total_pages if total_pages > 0 else 0
+        
+        # 統計資料
+        domains = {}
+        depths = {}
+        keywords_coverage = {}
+        
+        for item in crawl_data:
+            # 域名統計
+            domain = urlparse(item.get('url', '')).netloc
+            domains[domain] = domains.get(domain, 0) + 1
+            
+            # 深度統計
+            depth = item.get('depth', 0)
+            depths[depth] = depths.get(depth, 0) + 1
+            
+            # 關鍵字覆蓋統計
+            content = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+            for keyword in item.get('keywords', []):
+                if keyword.lower() in content:
+                    keywords_coverage[keyword] = keywords_coverage.get(keyword, 0) + 1
+        
+        # 找出最有價值的頁面
+        valuable_pages = sorted(helpful_pages, 
+                              key=lambda x: x.get('relevance_score', 0), 
+                              reverse=True)[:10]
+        
+        # 建立報表
+        report = f"""# 爬蟲任務統整報表
+
+## 📊 執行摘要
+
+- **爬取時間**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+- **總頁面數**: {total_pages}
+- **有幫助頁面**: {len(helpful_pages)} ({len(helpful_pages)/total_pages*100:.1f}%)
+- **平均相關度**: {avg_confidence:.2f}
+- **任務信心度**: {max(item.get('relevance_score', 0) for item in crawl_data)*100:.1f}%
+
+## 🎯 任務資訊
+
+"""
+        
+        # 添加任務詳情
+        if crawl_data:
+            first_item = crawl_data[0]
+            if 'task_title' in first_item:
+                report += f"**任務標題**: {first_item['task_title']}\n\n"
+            if 'task_description' in first_item:
+                report += f"**任務描述**: {first_item['task_description']}\n\n"
+            if 'keywords' in first_item:
+                report += f"**關鍵字**: {', '.join(first_item['keywords'])}\n\n"
+        
+        # 網站分佈統計
+        report += "## 🌐 來源網站分佈\n\n"
+        sorted_domains = sorted(domains.items(), key=lambda x: x[1], reverse=True)
+        for domain, count in sorted_domains[:10]:
+            percentage = count / total_pages * 100
+            report += f"- **{domain}**: {count} 頁 ({percentage:.1f}%)\n"
+        
+        # 深度分佈
+        report += "\n## 📊 爬取深度分佈\n\n"
+        sorted_depths = sorted(depths.items())
+        for depth, count in sorted_depths:
+            percentage = count / total_pages * 100
+            report += f"- **第 {depth} 層**: {count} 頁 ({percentage:.1f}%)\n"
+        
+        # 關鍵字覆蓋
+        report += "\n## 🔍 關鍵字覆蓋分析\n\n"
+        sorted_keywords = sorted(keywords_coverage.items(), key=lambda x: x[1], reverse=True)
+        for keyword, count in sorted_keywords:
+            coverage = count / total_pages * 100
+            report += f"- **{keyword}**: {count} 頁覆蓋 ({coverage:.1f}%)\n"
+        
+        # 最有價值的內容
+        report += "\n## ⭐ 最有價值的內容\n\n"
+        for i, page in enumerate(valuable_pages, 1):
+            report += f"### {i}. {page.get('title', '無標題')}\n\n"
+            report += f"**URL**: {page.get('url', '')}\n\n"
+            report += f"**相關度**: {page.get('relevance_score', 0):.2f}\n\n"
+            report += f"**摘要**: {page.get('summary', '無摘要')}\n\n"
+            if page.get('found_via'):
+                report += f"**發現方式**: {page.get('found_via')}\n\n"
+            report += "---\n\n"
+        
+        # 改進建議
+        report += "## 💡 內容分析與建議\n\n"
+        
+        # 分析覆蓋不足的關鍵字
+        low_coverage_keywords = [k for k, v in keywords_coverage.items() if v < total_pages * 0.3]
+        if low_coverage_keywords:
+            report += f"**覆蓋不足的關鍵字**: {', '.join(low_coverage_keywords)}\n\n"
+        
+        # 分析幫助度分佈
+        if len(helpful_pages) < total_pages * 0.5:
+            report += "**建議**: 當前有幫助的內容比例較低，建議調整搜索策略或關鍵字。\n\n"
+        
+        # 分析深度效率
+        deep_pages = [item for item in crawl_data if item.get('depth', 0) > 2]
+        if deep_pages:
+            deep_helpful = [item for item in deep_pages if item.get('is_helpful', False)]
+            deep_efficiency = len(deep_helpful) / len(deep_pages) if deep_pages else 0
+            report += f"**深度爬取效率**: 深層頁面有幫助比例為 {deep_efficiency*100:.1f}%\n\n"
+        
+        # 資料品質評估
+        report += "## 📈 資料品質評估\n\n"
+        quality_score = self._calculate_quality_score(crawl_data)
+        report += f"**整體品質分數**: {quality_score:.1f}/10\n\n"
+        
+        # 詳細資料統計
+        report += "## 📋 詳細統計資料\n\n"
+        report += f"- 成功爬取頁面: {len([item for item in crawl_data if item.get('success', True)])}\n"
+        report += f"- 失敗頁面: {len([item for item in crawl_data if not item.get('success', True)])}\n"
+        
+        # 計算包含關鍵字的頁面
+        keyword_pages = 0
+        for item in crawl_data:
+            content_text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+            keywords = item.get('keywords', [])
+            if any(kw.lower() in content_text for kw in keywords):
+                keyword_pages += 1
+        
+        report += f"- 包含關鍵字的頁面: {keyword_pages}\n"
+        report += f"- 最大爬取深度: {max(item.get('depth', 0) for item in crawl_data)}\n"
+        report += f"- 平均頁面內容長度: {sum(len(str(item.get('content', ''))) for item in crawl_data) // total_pages} 字元\n"
+        
+        # 添加生成時間戳
+        report += f"\n---\n*報表生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
+        
+        return report
+    
+    def _calculate_quality_score(self, crawl_data: List[Dict]) -> float:
+        """計算資料品質分數 (0-10)"""
+        if not crawl_data:
+            return 0.0
+        
+        score = 0.0
+        total_pages = len(crawl_data)
+        
+        # 成功率 (0-2分)
+        success_rate = len([item for item in crawl_data if item.get('success', True)]) / total_pages
+        score += success_rate * 2
+        
+        # 幫助度比例 (0-3分)
+        helpful_rate = len([item for item in crawl_data if item.get('is_helpful', False)]) / total_pages
+        score += helpful_rate * 3
+        
+        # 平均相關度 (0-3分)
+        avg_relevance = sum(item.get('relevance_score', 0) for item in crawl_data) / total_pages
+        score += avg_relevance * 3
+        
+        # 內容完整性 (0-2分)
+        complete_content = len([item for item in crawl_data if item.get('summary') and len(str(item.get('summary', ''))) > 50]) / total_pages
+        score += complete_content * 2
+        
+        return min(score, 10.0)
+
     return result
 
+# 新增輔助函數用於報表生成
+async def generate_report_from_jsonl(jsonl_file: str, output_file: Optional[str] = None) -> str:
+    """從JSONL檔案生成報表的獨立函數"""
+    try:
+        from datetime import datetime
+        import os
+        import json
+        from urllib.parse import urlparse
+        
+        if not os.path.exists(jsonl_file):
+            raise FileNotFoundError(f"JSONL檔案不存在: {jsonl_file}")
+        
+        # 讀取JSONL資料
+        crawl_data = []
+        with open(jsonl_file, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    data = json.loads(line.strip())
+                    crawl_data.append(data)
+                except json.JSONDecodeError:
+                    continue
+        
+        if not crawl_data:
+            logger.warning("JSONL檔案中沒有有效資料")
+            return ""
+        
+        # 直接調用報表生成邏輯
+        report = _create_markdown_report_standalone(crawl_data)
+        
+        # 儲存報表
+        if output_file is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            output_file = f"crawl_report_{timestamp}.md"
+        
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(report)
+        
+        logger.info(f"統整報表已生成: {output_file}")
+        return output_file
+        
+    except Exception as e:
+        logger.error(f"生成統整報表失敗: {e}")
+        return ""
+
+def _create_markdown_report_standalone(crawl_data: List[Dict]) -> str:
+    """創建Markdown格式的統整報表（獨立函數版本）"""
+    from datetime import datetime
+    from urllib.parse import urlparse
+    
+    # 分析資料
+    total_pages = len(crawl_data)
+    helpful_pages = [item for item in crawl_data if item.get('is_helpful', False)]
+    avg_confidence = sum(item.get('relevance_score', 0) for item in crawl_data) / total_pages if total_pages > 0 else 0
+    
+    # 統計資料
+    domains = {}
+    depths = {}
+    keywords_coverage = {}
+    
+    for item in crawl_data:
+        # 域名統計
+        domain = urlparse(item.get('url', '')).netloc
+        domains[domain] = domains.get(domain, 0) + 1
+        
+        # 深度統計
+        depth = item.get('depth', 0)
+        depths[depth] = depths.get(depth, 0) + 1
+        
+        # 關鍵字覆蓋統計
+        content = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+        for keyword in item.get('keywords', []):
+            if keyword.lower() in content:
+                keywords_coverage[keyword] = keywords_coverage.get(keyword, 0) + 1
+    
+    # 找出最有價值的頁面
+    valuable_pages = sorted(helpful_pages, 
+                          key=lambda x: x.get('relevance_score', 0), 
+                          reverse=True)[:10]
+    
+    # 建立報表
+    report = f"""# 爬蟲任務統整報表
+
+## 📊 執行摘要
+
+- **爬取時間**: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+- **總頁面數**: {total_pages}
+- **有幫助頁面**: {len(helpful_pages)} ({len(helpful_pages)/total_pages*100:.1f}%)
+- **平均相關度**: {avg_confidence:.2f}
+- **任務信心度**: {max(item.get('relevance_score', 0) for item in crawl_data)*100:.1f}%
+
+## 🎯 任務資訊
+
+"""
+    
+    # 添加任務詳情
+    if crawl_data:
+        first_item = crawl_data[0]
+        if 'task_title' in first_item:
+            report += f"**任務標題**: {first_item['task_title']}\n\n"
+        if 'task_description' in first_item:
+            report += f"**任務描述**: {first_item['task_description']}\n\n"
+        if 'keywords' in first_item:
+            report += f"**關鍵字**: {', '.join(first_item['keywords'])}\n\n"
+    
+    # 網站分佈統計
+    report += "## 🌐 來源網站分佈\n\n"
+    sorted_domains = sorted(domains.items(), key=lambda x: x[1], reverse=True)
+    for domain, count in sorted_domains[:10]:
+        percentage = count / total_pages * 100
+        report += f"- **{domain}**: {count} 頁 ({percentage:.1f}%)\n"
+    
+    # 深度分佈
+    report += "\n## 📊 爬取深度分佈\n\n"
+    sorted_depths = sorted(depths.items())
+    for depth, count in sorted_depths:
+        percentage = count / total_pages * 100
+        report += f"- **第 {depth} 層**: {count} 頁 ({percentage:.1f}%)\n"
+    
+    # 關鍵字覆蓋
+    report += "\n## 🔍 關鍵字覆蓋分析\n\n"
+    sorted_keywords = sorted(keywords_coverage.items(), key=lambda x: x[1], reverse=True)
+    for keyword, count in sorted_keywords:
+        coverage = count / total_pages * 100
+        report += f"- **{keyword}**: {count} 頁覆蓋 ({coverage:.1f}%)\n"
+    
+    # 最有價值的內容
+    report += "\n## ⭐ 最有價值的內容\n\n"
+    for i, page in enumerate(valuable_pages, 1):
+        report += f"### {i}. {page.get('title', '無標題')}\n\n"
+        report += f"**URL**: {page.get('url', '')}\n\n"
+        report += f"**相關度**: {page.get('relevance_score', 0):.2f}\n\n"
+        report += f"**摘要**: {page.get('summary', '無摘要')}\n\n"
+        if page.get('found_via'):
+            report += f"**發現方式**: {page.get('found_via')}\n\n"
+        report += "---\n\n"
+    
+    # 改進建議
+    report += "## 💡 內容分析與建議\n\n"
+    
+    # 分析覆蓋不足的關鍵字
+    low_coverage_keywords = [k for k, v in keywords_coverage.items() if v < total_pages * 0.3]
+    if low_coverage_keywords:
+        report += f"**覆蓋不足的關鍵字**: {', '.join(low_coverage_keywords)}\n\n"
+    
+    # 分析幫助度分佈
+    if len(helpful_pages) < total_pages * 0.5:
+        report += "**建議**: 當前有幫助的內容比例較低，建議調整搜索策略或關鍵字。\n\n"
+    
+    # 分析深度效率
+    deep_pages = [item for item in crawl_data if item.get('depth', 0) > 2]
+    if deep_pages:
+        deep_helpful = [item for item in deep_pages if item.get('is_helpful', False)]
+        deep_efficiency = len(deep_helpful) / len(deep_pages) if deep_pages else 0
+        report += f"**深度爬取效率**: 深層頁面有幫助比例為 {deep_efficiency*100:.1f}%\n\n"
+    
+    # 資料品質評估
+    report += "## 📈 資料品質評估\n\n"
+    quality_score = _calculate_quality_score_standalone(crawl_data)
+    report += f"**整體品質分數**: {quality_score:.1f}/10\n\n"
+    
+    # 詳細資料統計
+    report += "## 📋 詳細統計資料\n\n"
+    report += f"- 成功爬取頁面: {len([item for item in crawl_data if item.get('success', True)])}\n"
+    report += f"- 失敗頁面: {len([item for item in crawl_data if not item.get('success', True)])}\n"
+    
+    # 計算包含關鍵字的頁面
+    keyword_pages = 0
+    for item in crawl_data:
+        content_text = f"{item.get('title', '')} {item.get('summary', '')}".lower()
+        keywords = item.get('keywords', [])
+        if any(kw.lower() in content_text for kw in keywords):
+            keyword_pages += 1
+    
+    report += f"- 包含關鍵字的頁面: {keyword_pages}\n"
+    report += f"- 最大爬取深度: {max(item.get('depth', 0) for item in crawl_data)}\n"
+    report += f"- 平均頁面內容長度: {sum(len(str(item.get('content', ''))) for item in crawl_data) // total_pages} 字元\n"
+    
+    # 添加生成時間戳
+    report += f"\n---\n*報表生成時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n"
+    
+    return report
+
+def _calculate_quality_score_standalone(crawl_data: List[Dict]) -> float:
+    """計算資料品質分數 (0-10)（獨立函數版本）"""
+    if not crawl_data:
+        return 0.0
+    
+    score = 0.0
+    total_pages = len(crawl_data)
+    
+    # 成功率 (0-2分)
+    success_rate = len([item for item in crawl_data if item.get('success', True)]) / total_pages
+    score += success_rate * 2
+    
+    # 幫助度比例 (0-3分)
+    helpful_rate = len([item for item in crawl_data if item.get('is_helpful', False)]) / total_pages
+    score += helpful_rate * 3
+    
+    # 平均相關度 (0-3分)
+    avg_relevance = sum(item.get('relevance_score', 0) for item in crawl_data) / total_pages
+    score += avg_relevance * 3
+    
+    # 內容完整性 (0-2分)
+    complete_content = len([item for item in crawl_data if item.get('summary') and len(str(item.get('summary', ''))) > 50]) / total_pages
+    score += complete_content * 2
+    
+    return min(score, 10.0)
+
 if __name__ == "__main__":
-    # 運行範例
-    asyncio.run(example_nvidia_analysis())
+    # 運行範例 - 演示所有新功能
+    async def main():
+        # 建立基本LLM配置
+        from crawl4ai import LLMConfig
+        llm_config = LLMConfig(
+            base_url="http://localhost:1234/v1",
+            api_token="sk-test-token"
+        )
+        
+        # 示例1：台灣本土任務（展示地理本地化功能）
+        print("=== 示例1：台灣本土任務（地理本地化） ===")
+        try:
+            taiwan_task = await quick_crawl_task(
+                title="台灣半導體產業發展現況",
+                description="分析台灣半導體產業的最新發展趨勢、政策支持和國際競爭力",
+                keywords=["台積電", "聯發科", "半導體", "台灣", "晶圓"],
+                llm_config=llm_config,
+                max_search_depth=3,
+                enable_dynamic_search=True,
+                search_strictness="moderate"
+            )
+            print(f"台灣任務完成：{taiwan_task.status}，信心度：{taiwan_task.confidence_score:.2%}")
+        except Exception as e:
+            print(f"台灣任務示例失敗：{e}")
+        
+        # 示例2：動態搜索示例
+        print("\n=== 示例2：動態互動搜索 ===")
+        try:
+            dynamic_task = await quick_crawl_task(
+                title="AI法規監管政策研究",
+                description="研究各國AI人工智慧法規監管政策和實施情況",
+                keywords=["AI法規", "人工智慧監管", "GDPR", "算法透明度"],
+                llm_config=llm_config,
+                max_search_depth=5,
+                enable_dynamic_search=True,
+                search_strictness="strict"
+            )
+            print(f"動態搜索任務完成：{dynamic_task.status}，信心度：{dynamic_task.confidence_score:.2%}")
+        except Exception as e:
+            print(f"動態搜索示例失敗：{e}")
+        
+        # 示例3：生成統整報表
+        print("\n=== 示例3：生成統整報表 ===")
+        # 假設已有JSONL檔案，生成報表
+        try:
+            report_file = await generate_report_from_jsonl("task_results.jsonl")
+            if report_file:
+                print(f"報表生成成功：{report_file}")
+                # 讀取並顯示部分內容
+                with open(report_file, 'r', encoding='utf-8') as f:
+                    content = f.read()[:500]  # 顯示前500字元
+                    print(f"報表預覽：\n{content}...")
+            else:
+                print("報表生成失敗或JSONL檔案不存在")
+        except Exception as e:
+            print(f"報表生成示例跳過：{e}")
+        
+        # 示例4：展示基礎功能（使用原有的nvidia示例）
+        print("\n=== 示例4：基礎任務功能 ===")
+        try:
+            await example_nvidia_analysis()
+        except Exception as e:
+            print(f"基礎功能示例失敗：{e}")
+    
+    asyncio.run(main())
